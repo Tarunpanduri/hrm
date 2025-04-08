@@ -28,7 +28,6 @@ export class LeaverequestComponent implements OnInit {
     status: 'Pending'
   };
 
-  // ngx-echarts chart options
   leaveChartOptions: any = {};
   leaveChartUpdate: boolean = false;
 
@@ -37,12 +36,19 @@ export class LeaverequestComponent implements OnInit {
   }
 
   ngOnInit() {
+    const dark = localStorage.getItem('darkMode') === 'true';
+    this.darkMode = dark;
+    if (dark) {
+      this.renderer.addClass(document.body, 'dark-mode');
+    }
+
     this.loadEmployeeData();
     this.listenForLeaveUpdates();
   }
 
   toggleDarkMode() {
     this.darkMode = !this.darkMode;
+    localStorage.setItem('darkMode', this.darkMode.toString());
     if (this.darkMode) {
       this.renderer.addClass(document.body, 'dark-mode');
     } else {
@@ -58,6 +64,10 @@ export class LeaverequestComponent implements OnInit {
       filtered = filtered.filter(leave =>
         leave.type?.toLowerCase().includes(query) || leave.status?.toLowerCase().includes(query)
       );
+    }
+
+    if (this.filterStatus) {
+      filtered = filtered.filter(leave => leave.status === this.filterStatus);
     }
 
     if (this.sortBy === 'date') {
@@ -85,8 +95,8 @@ export class LeaverequestComponent implements OnInit {
     const leaveRef = ref(this.db, `leaves/${this.empId}`);
     const leaveSnapshot = await get(leaveRef);
     if (leaveSnapshot.exists()) {
-      this.totalLeaves = leaveSnapshot.val().totalLeaves;
-      this.remainingLeaves = leaveSnapshot.val().remainingLeaves;
+      this.totalLeaves = parseInt(leaveSnapshot.val().totalLeaves);
+      this.remainingLeaves = parseInt(leaveSnapshot.val().remainingLeaves);
     }
     this.generateChart();
   }
@@ -96,18 +106,80 @@ export class LeaverequestComponent implements OnInit {
       alert('Please fill all fields!');
       return;
     }
+
     if (!this.empId) {
       alert('Employee ID not found. Please log in again.');
+      return;
+    }
+
+    const start = new Date(this.leaveRequest.startDate);
+    const end = new Date(this.leaveRequest.endDate);
+    const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
+    if (days <= 0) {
+      alert('Invalid leave duration.');
+      return;
+    }
+
+    if (this.remainingLeaves < days) {
+      alert(`Insufficient leave balance. You only have ${this.remainingLeaves} days left.`);
       return;
     }
 
     try {
       const leaveRef = ref(this.db, `leaveRequests/${this.empId}`);
       const newLeaveRef = push(leaveRef);
-      await set(newLeaveRef, this.leaveRequest);
+      await set(newLeaveRef, {
+        ...this.leaveRequest,
+        days,
+        requestId: newLeaveRef.key
+      });
+
+      const leaveBalanceRef = ref(this.db, `leaves/${this.empId}`);
+      await set(leaveBalanceRef, {
+        totalLeaves: this.totalLeaves,
+        remainingLeaves: this.remainingLeaves - days
+      });
+
       alert('Leave Request Submitted!');
+      this.leaveRequest = { type: '', startDate: '', endDate: '', reason: '', status: 'Pending' };
+      this.fetchLeaveBalance();
     } catch (error) {
       console.error('Error submitting leave request:', error);
+    }
+  }
+
+  async revertLeaveDays(empId: string, requestId: string) {
+    const requestRef = ref(this.db, `leaveRequests/${empId}/${requestId}`);
+    const snapshot = await get(requestRef);
+    
+    if (snapshot.exists()) {
+      const request = snapshot.val();
+      const days = parseInt(request.days || 0);
+
+      // Update leave request status to Rejected
+      await set(requestRef, {
+        ...request,
+        status: 'Rejected'
+      });
+
+      // Revert remaining leaves
+      const balanceRef = ref(this.db, `leaves/${empId}`);
+      const balanceSnapshot = await get(balanceRef);
+      if (balanceSnapshot.exists()) {
+        const balance = balanceSnapshot.val();
+        const updatedLeaves = parseInt(balance.remainingLeaves) + days;
+
+        await set(balanceRef, {
+          totalLeaves: parseInt(balance.totalLeaves),
+          remainingLeaves: updatedLeaves
+        });
+
+        alert('Leave Rejected and Days Reverted');
+        if (empId === this.empId) {
+          this.fetchLeaveBalance(); // refresh chart if it's the current user
+        }
+      }
     }
   }
 
@@ -118,6 +190,7 @@ export class LeaverequestComponent implements OnInit {
       snapshot.forEach((childSnapshot) => {
         this.leaveRequests.push(childSnapshot.val());
       });
+      this.fetchLeaveBalance();
     });
   }
 
@@ -132,7 +205,7 @@ export class LeaverequestComponent implements OnInit {
       },
       legend: {
         top: 'bottom',
-        bottom:'80'
+        bottom: '80'
       },
       series: [
         {

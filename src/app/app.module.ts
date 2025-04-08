@@ -39,7 +39,7 @@ import { AbsentEmployeesComponent } from './components/shared/absent-employees/a
 
 import { AdminlayoutComponent } from './components/adminlayout/adminlayout.component';
 import { DashboardPageComponent } from './components/adminlayout/dashboard-page/dashboard-page.component';
-import { HgjgComponent } from './components/hgjg/hgjg.component';
+import { HgjgComponent } from './components/who_away/hgjg.component';
 import { LayoutComponent } from './components/managerdashboard/layout/layout.component';
 import { DashboardComponent } from './components/managerdashboard/layout/dashboard/dashboard.component';
 

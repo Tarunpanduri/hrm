@@ -10,7 +10,7 @@ import { DashboardPageComponent } from './components/adminlayout/dashboard-page/
 import { EmployeedashboardComponent } from './components/employeedashboard/employeedashboard.component';
 import { LoginComponent } from './components/login/login.component';
 import { ManagerdashboardComponent } from './components/managerdashboard/managerdashboard.component';
-import { HgjgComponent } from './components/hgjg/hgjg.component';
+import { HgjgComponent } from './components/who_away/hgjg.component';
 import { DashboardComponent } from './components/managerdashboard/layout/dashboard/dashboard.component';
 import { LayoutComponent } from './components/managerdashboard/layout/layout.component';
 
