@@ -48,29 +48,32 @@ export class AttendanceChartComponent implements OnInit {
     this.workingHoursByDepartment = {};
 
     const now = new Date();
-    const currentTime = `${now.getHours()}:${now.getMinutes() < 10 ? '0' : ''}${now.getMinutes()} ${now.getHours() >= 12 ? 'PM' : 'AM'}`;
 
     for (const empId in this.attendance) {
       const emp = this.employees[empId];
       const attendance = this.attendance[empId];
 
-      if (emp && attendance.status === "Present") {
+      if (emp && attendance.status === 'Present') {
         const department = emp.department;
-
         this.attendanceByDepartment[department] = (this.attendanceByDepartment[department] || 0) + 1;
 
         if (!attendance.checkin) continue;
 
-        const checkinTime = this.convertTo24Hour(attendance.checkin);
-        const checkoutTime = attendance.checkout ? this.convertTo24Hour(attendance.checkout) : this.convertTo24Hour(currentTime);
+        const checkinDate = this.convertTimeToDate(attendance.checkin);
+        const checkoutDate = attendance.checkout
+          ? this.convertTimeToDate(attendance.checkout)
+          : now;
 
-        const workingHours = checkoutTime - checkinTime;
+        const workingMilliseconds = checkoutDate.getTime() - checkinDate.getTime();
+        const workingHours = workingMilliseconds / (1000 * 60 * 60); // convert ms to hours
 
-        this.workingHoursByDepartment[department] = (this.workingHoursByDepartment[department] || 0) + workingHours;
+        // Only count if valid
+        if (workingHours > 0 && workingHours < 24) {
+          this.workingHoursByDepartment[department] =
+            (this.workingHoursByDepartment[department] || 0) + parseFloat(workingHours.toFixed(2));
+        }
       }
     }
-
-    this.generateCharts();
   }
 
   generateCharts() {
@@ -78,13 +81,9 @@ export class AttendanceChartComponent implements OnInit {
     const attendanceValues = Object.values(this.attendanceByDepartment);
     const workingHourValues = Object.values(this.workingHoursByDepartment);
 
-    const colors = ['#008080', '#28a745', '#ffc107', '#dc3545', '#17a2b8'];
-
-    // === PIE CHART ===
-    const pieChartData = departments.map((dept, index) => ({
+    const pieChartData = departments.map((dept) => ({
       name: dept,
-      value: this.attendanceByDepartment[dept],
-      itemStyle: { color: colors[index % colors.length] }
+      value: this.attendanceByDepartment[dept]
     }));
 
     this.pieChartOptions = {
@@ -93,11 +92,6 @@ export class AttendanceChartComponent implements OnInit {
         left: 'center',
         bottom: 1,
         textStyle: { fontSize: 12 }
-      },
-      tooltip: { trigger: 'item' },
-      legend: {
-        orient: 'vertical',
-        left: 'left'
       },
       series: [
         {
@@ -116,14 +110,8 @@ export class AttendanceChartComponent implements OnInit {
       ]
     };
 
-    // === BAR CHART ===
-    const barData = workingHourValues.map((value, index) => ({
-      value: value,
-      itemStyle: {
-        color: colors[index % colors.length],
-        borderRadius: [8, 8, 0, 0] // Rounded corners on top
-      }
-    }));
+    // Assign different colors manually
+    const colors = ['#5470C6', '#91CC75', '#FAC858', '#EE6666', '#73C0DE', '#3BA272'];
 
     this.barChartOptions = {
       title: {
@@ -145,7 +133,10 @@ export class AttendanceChartComponent implements OnInit {
         {
           name: 'Hours Worked',
           type: 'bar',
-          data: barData,
+          data: departments.map((dept, index) => ({
+            value: this.workingHoursByDepartment[dept],
+            itemStyle: { color: colors[index % colors.length] }
+          })),
           barWidth: '50%'
         }
       ]
@@ -154,12 +145,17 @@ export class AttendanceChartComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  convertTo24Hour(time: string): number {
-    const [timePart, modifier] = time.split(" ");
+  // Strict date construction using today's date
+  convertTimeToDate(timeStr: string): Date {
+    const [timePart, modifier] = timeStr.split(" ");
     let [hours, minutes] = timePart.split(":").map(Number);
-    if (modifier === "PM" && hours !== 12) hours += 12;
-    if (modifier === "AM" && hours === 12) hours = 0;
-    return hours + minutes / 60;
+
+    if (modifier === 'PM' && hours !== 12) hours += 12;
+    if (modifier === 'AM' && hours === 12) hours = 0;
+
+    const now = new Date();
+    const date = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0);
+    return date;
   }
 
   getCurrentDate(): string {

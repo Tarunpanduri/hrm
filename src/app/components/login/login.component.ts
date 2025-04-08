@@ -46,6 +46,21 @@ export class LoginComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
+
+    // 🔁 Auto-login if user already exists in localStorage
+    const savedUser = localStorage.getItem('fbhgkjwruguegi');
+    if (savedUser) {
+      const employee = JSON.parse(savedUser);
+      const dept = employee.department?.toUpperCase();
+
+      if (dept === 'HR') {
+        this.router.navigate(['/admin-dashboard']);
+      } else if (dept === 'MANAGEMENT') {
+        this.router.navigate(['/manager']);
+      } else {
+        this.router.navigate(['/employee']);
+      }
+    }
   }
 
   async signInWithGoogle(): Promise<void> {
@@ -63,7 +78,6 @@ export class LoginComponent implements OnInit {
         return;
       }
 
-      // ✅ Check using personal_mail instead of email
       const db = getDatabase();
       const dbRef = ref(db, 'employees');
       const snapshot = await get(child(dbRef, '/'));
@@ -77,8 +91,11 @@ export class LoginComponent implements OnInit {
           console.log('✅ Verified Employee via personal_mail:', employee);
           localStorage.setItem('fbhgkjwruguegi', JSON.stringify(employee));
 
-          if (employee.department === 'HR') {
+          const dept = employee.department?.toUpperCase();
+          if (dept === 'HR') {
             this.router.navigate(['/admin-dashboard']);
+          } else if (dept === 'MANAGEMENT') {
+            this.router.navigate(['/manager']);
           } else {
             this.router.navigate(['/employee-dashboard']);
           }
@@ -122,7 +139,7 @@ export class LoginComponent implements OnInit {
       const user = userCredential.user;
       console.log('✅ Login Successful:', user);
 
-      await this.checkUserRole(user); // Checks against 'email'
+      await this.checkUserRole(user);
     } catch (error: any) {
       console.error('❌ Login Error:', error);
 
@@ -158,8 +175,11 @@ export class LoginComponent implements OnInit {
           console.log('✅ Employee Found:', employee);
           localStorage.setItem('fbhgkjwruguegi', JSON.stringify(employee));
 
-          if (employee.department === 'HR') {
+          const dept = employee.department?.toUpperCase();
+          if (dept === 'HR') {
             this.router.navigate(['/admin-dashboard']);
+          } else if (dept === 'MANAGEMENT') {
+            this.router.navigate(['/manager']);
           } else {
             this.router.navigate(['/employee-dashboard']);
           }
@@ -177,6 +197,7 @@ export class LoginComponent implements OnInit {
     }
   }
 }
+
 
 // cachenull
 // employeeData

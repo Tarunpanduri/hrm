@@ -28,6 +28,7 @@ import { CheckinComponent } from './components/checkin/checkin.component';
 import { AttendanceChartComponent } from './components/attendeces/chart/attendance-chart/attendance-chart.component';
 import { LeaverequestComponent } from './components/employeedashboard/leaverequest/leaverequest.component';
 import { AdminleaveapproveComponent } from './components/adminleaveapprove/adminleaveapprove.component';
+import { PeopleComponent } from './components/people/people.component';
 
 import { SidebarComponent } from './components/shared/sidebar/sidebar.component';
 import { HeaderComponent } from './components/shared/header/header.component';
@@ -42,6 +43,11 @@ import { DashboardPageComponent } from './components/adminlayout/dashboard-page/
 import { HgjgComponent } from './components/who_away/hgjg.component';
 import { LayoutComponent } from './components/managerdashboard/layout/layout.component';
 import { DashboardComponent } from './components/managerdashboard/layout/dashboard/dashboard.component';
+import { AttendanceSummaryComponent } from './components/employeedashboard/attendance-summary/attendance-summary.component';
+import { EmployeeSidebarComponent } from './components/shared/employee-sidebar/employee-sidebar.component';
+import { EmployeelayoutComponent } from './components/employeedashboard/employeelayout/employeelayout.component';
+import { EmployeedashboardlayoutComponent } from './components/employeedashboard/employeelayout/employeedashboardlayout/employeedashboardlayout.component';
+import { ApplicantComponent } from './components/applicant-tracker/applicant/applicant.component';
 
 
 @NgModule({
@@ -65,7 +71,13 @@ import { DashboardComponent } from './components/managerdashboard/layout/dashboa
     DashboardPageComponent,
     HgjgComponent,
     LayoutComponent,
-    DashboardComponent
+    DashboardComponent,
+    AttendanceSummaryComponent,
+    EmployeeSidebarComponent,
+    PeopleComponent,
+    EmployeelayoutComponent,
+    EmployeedashboardlayoutComponent,
+    ApplicantComponent,
   ],
   imports: [
     BrowserModule,

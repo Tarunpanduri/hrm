@@ -1,0 +1,51 @@
+<!-- Dashboard Container -->
+<div class="dashboard-container">
+
+  <!-- Top container with department cards and chart -->
+  <div class="top-container">
+
+    <!-- Scrollable Department Cards -->
+    <div class="departments-container">
+      <div #departmentsWrapper class="departments">
+        <div 
+          *ngFor="let department of departments"
+          class="card"
+          [ngClass]="getDepartmentClass(department.name)"
+          (click)="selectDepartment(department.name)" 
+          [class.selected]="selectedDepartment === department.name"
+        >
+          <img [src]="department.img" [alt]="department.name" class="department-icon" />
+          <p>{{ department.name }}</p>
+        </div>        
+      </div>
+    </div>
+
+    <!-- ECharts Donut Chart -->
+    <div class="chart-container" *ngIf="chartOptions">
+      <div echarts [options]="chartOptions" class="chart" style="width: 300px; height: 195px; border: 2px solid #ced4da; margin-bottom: 20px;"></div>
+    </div>
+
+  </div>
+
+
+<!-- Employee Section -->
+<div class="employee-card">
+  <div class="employee-scroll-wrapper">
+    <div class="employee-row" *ngFor="let employee of filteredEmployees">
+      <img [src]="employee.profileImg || 'assets/default-avatar.png'" alt="{{ employee.name }}">
+      <div class="employee-info">
+        <p class="name" style="font-weight: 600;">{{ employee.name }}</p>
+        <p class="role">{{ employee.role }}</p>
+      </div>
+      <div class="location">
+        <p>{{ employee.location || 'Unknown' }}</p>
+      </div>
+      <span class="department-label" [ngClass]="getDepartmentClass(employee.department)">
+        {{ employee.department || 'No Department' }}
+      </span>
+    </div>
+  </div>
+</div>
+
+
+</div>

@@ -1,0 +1,18 @@
+        <!-- Stats Section -->
+        <section class="stats">
+            <div class="seco">
+            <app-checkin></app-checkin>
+            </div>
+            <app-employeecharts></app-employeecharts>
+        </section>
+    
+        <!-- Leave Requests -->
+        <div style="margin-top: 15px; display: flex; flex-direction: row;" class="lr" >
+            <app-leaverequest></app-leaverequest>
+            <div style="margin-top: -20px;">
+            <app-tasks [cardwidth]="'450px'"></app-tasks>
+            </div>
+        </div>
+    
+        <!-- ATTENDENCE lOG -->
+        <app-attendance-summary></app-attendance-summary>

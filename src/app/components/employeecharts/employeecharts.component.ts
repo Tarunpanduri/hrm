@@ -4,7 +4,7 @@ import { Database, ref, get, child } from '@angular/fire/database';
 
 @Component({
   selector: 'app-employeecharts',
-  standalone:false,
+  standalone: false,
   templateUrl: './employeecharts.component.html',
   styleUrls: ['./employeecharts.component.css']
 })
@@ -141,7 +141,7 @@ export class EmployeechartsComponent implements OnInit {
   prepareDepartmentChart(data: any): void {
     const pieData = Object.keys(data).map(key => ({
       name: data[key].name,
-      value: data[key].members
+      value: Number(data[key].crew || 0)
     }));
 
     this.departmentChartOption = {

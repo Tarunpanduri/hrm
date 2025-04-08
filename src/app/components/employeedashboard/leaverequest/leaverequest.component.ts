@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2,Input } from '@angular/core';
 import { Database, ref, get, set, push, onValue } from '@angular/fire/database';
 
 @Component({
@@ -8,6 +8,8 @@ import { Database, ref, get, set, push, onValue } from '@angular/fire/database';
   styleUrl: './leaverequest.component.css'
 })
 export class LeaverequestComponent implements OnInit {
+  @Input() cardheight: string = 'auto'; 
+
   darkMode: boolean = false;
   leaveRequests: any[] = [];
   searchQuery: string = '';

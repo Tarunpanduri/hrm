@@ -6,11 +6,11 @@
     <div class="seco">
       <app-checkin></app-checkin>
     </div>
-    <app-attendance-chart></app-attendance-chart>
+    <app-attendance-chart ></app-attendance-chart>
   </section>
   
   <div class="dashboard-content">
-    <app-leaverequest></app-leaverequest>
+    <app-leaverequest [cardheight]="'1062px'"></app-leaverequest>
   
     <div class="section-container">
       <app-tasks></app-tasks>
@@ -20,5 +20,7 @@
   
     <app-adminleaveapprove [cardHeight]="'530px'" [tbodyHeight]="'370px'"></app-adminleaveapprove>
   </div>
+          <!-- ATTENDENCE lOG -->
+          <app-attendance-summary></app-attendance-summary>
 </div>
   
