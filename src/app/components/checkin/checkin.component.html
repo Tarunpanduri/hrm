@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="content">
+    <!-- Left Section -->
+    <div class="section-left">
+      <button class="checkin-btn" (click)="checkIn()" [disabled]="checkinTime">Check in</button>
+      <p>check in: {{ checkinTime || '--:-- --' }}</p>
+
+      <button class="checkout-btn" (click)="checkOut()" [disabled]="!checkinTime || checkoutTime">Check out</button>
+      <p>check out: {{ checkoutTime || '--:-- --' }}</p>
+    </div>
+
+    <!-- Right Section (Updated) -->
+    <div class="section-right">
+      <!-- Top Section: Today's Average Time -->
+      <div class="info-box">
+        <i class="fas fa-clock"></i> <!-- Small Icon -->
+        <p class="info-title">Average today time:</p>
+        <p class="info-value">{{ todayWorkedHours || '0' }}</p>
+      </div>
+
+      <!-- Bottom Section: Weekly Report -->
+      <div class="info-box">
+        <i class="fas fa-chart-line"></i> <!-- Small Icon -->
+        <p class="info-title">Weekly report:</p>
+        <h2>{{ weeklyWorkedHours }}hrs/{{ fixedWeeklyHours }}hrs</h2>
+      </div>
+    </div>
+  </div>
+</div>

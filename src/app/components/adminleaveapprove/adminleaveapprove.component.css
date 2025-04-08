@@ -1,0 +1,114 @@
+.carddd {
+  background-color: #e0f7f7; /* light teal background */
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px auto;
+  color: #004d4d; /* dark teal text */
+  border: 2px solid #a0dcdc;
+  width: 860px;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.carddd h2 {
+  text-align: center;
+  color: #006666;
+  margin-bottom: 20px;
+}
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #b2dfdf; 
+  border-radius: 8px;
+  overflow: hidden;
+  font-weight: bold;
+}
+
+thead {
+  background-color: #009999; 
+  color: #ffffff;
+}
+
+th, td {
+  padding: 14px 18px;
+  text-align: left;
+}
+
+td {
+  border-bottom: 1px solid #80cfcf; 
+}
+.no-leave-row {
+  text-align: center;
+  font-style: italic;
+  color: #555;
+  font-weight: 500;
+
+  ;
+}
+
+/* Scrollable tbody */
+tbody {
+  display: block;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  border-bottom: 1px solid #CED4DA;
+}
+tbody::-webkit-scrollbar {
+  display: none;
+}
+thead, tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* Buttons */
+button {
+  background: none;
+  border: 1px solid #007777;
+  color: #007777;
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin: 2px;
+  transition: background 0.3s ease;
+  font-weight: 600;
+  
+}
+
+button.approve-btn {
+  background-color: #009688;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  margin: 2px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  margin-left: -10px;
+}
+
+button.approve-btn:hover {
+  background-color: #00796b;
+}
+
+button.reject-btn {
+  background-color: #ff5252;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  margin: 2px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  margin-left: -10px;
+}
+
+button.reject-btn:hover {
+  background-color: #e53935;
+}
+

@@ -1,0 +1,30 @@
+/* Make layout full height, no horizontal overflow */
+.layout-wrapper {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.maint {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.mainthree {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden; /* 💥 prevents horizontal scroll */
+  padding: 10px;
+  box-sizing: border-box;
+}

@@ -1,0 +1,130 @@
+.calendar-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* LEAVE REQUESTS LIST */
+  .leave-requests {
+    flex: 1;
+    min-width: 300px;
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 2px solid #ced4da;
+  }
+  
+  .leave-requests h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .leave-card {
+    background: #f7f9fc;
+    border-left: 4px solid #0095a5;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  
+  /* CALENDAR SECTION */
+  .calendar-wrapper {
+    flex: 2;
+    min-width: 500px;
+    
+  }
+  .leave-event .fc-event-title {
+    font-weight: 800 !important;
+  }
+
+  /* Optional: show holiday text in black */
+  .fc-event.holiday-event {
+    color: black !important;
+    font-weight: 500;
+  }
+  /* FULLCALENDAR DEFAULT STYLES OVERRIDE */
+  ::ng-deep .fc {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    border-radius: 12px;
+    width: 100%;
+    height: 560px;
+    /* min-height: 600px; */
+    padding: 1rem;
+    overflow: hidden;
+    border: 2px solid #ced4da;
+  }
+  
+  ::ng-deep .fc-toolbar {
+    display: flex;
+    
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  ::ng-deep .fc-toolbar-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  ::ng-deep .fc-button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+  }
+  
+  ::ng-deep .fc-daygrid-day-frame {
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    border-radius: 8px;
+    position: relative;
+    
+    z-index: 0;
+  }
+  
+  ::ng-deep .fc-daygrid-day-number {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333;
+    padding: 4px 6px;
+  }
+  
+  ::ng-deep .fc-col-header-cell {
+    font-weight: bold;
+    font-size: 0.85rem;
+    padding: 10px 0;
+    background: #f7f9fc;
+    color: #555;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  ::ng-deep .fc-scrollgrid {
+    border: none;
+  }
+  
+  ::ng-deep .fc-daygrid-event {
+    background-color: #28a745;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+  
+  ::ng-deep .fc-day-today {
+    background-color: #ffe69b !important;
+  }
+
+  
+
+
+  

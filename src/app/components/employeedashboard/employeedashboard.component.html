@@ -1,0 +1,34 @@
+<div class="main" style="display: flex; flex-direction: row;">
+    <app-sidebar></app-sidebar>
+  
+    <div class="maint" style="display: flex; flex-direction: column; height: 100vh; width: 100%;">
+      <app-header></app-header>
+  
+      <div class="mainthree" style="flex-grow: 1; overflow: auto; padding: 10px;">
+        <!-- Stats Section -->
+        <section class="stats">
+          <div class="seco">
+            <app-checkin></app-checkin>
+          </div>
+          <app-employeecharts></app-employeecharts>
+        </section>
+  
+        
+  
+    
+  
+
+        <!-- Leave Requests -->
+        <div style="margin-top: 15px; display: flex; flex-direction: row;" class="lr" >
+          <app-leaverequest></app-leaverequest>
+          <div style="margin-top: -20px;">
+            <app-tasks [cardwidth]="'450px'"></app-tasks>
+          </div>
+        </div>
+  
+
+  
+
+        </div>
+      </div>
+    </div>

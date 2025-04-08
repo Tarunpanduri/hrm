@@ -1,0 +1,24 @@
+<!-- dashboard-page.component.html -->
+
+<!-- Stats Section -->
+<div class="gghh">
+  <section class="stats">
+    <div class="seco">
+      <app-checkin></app-checkin>
+    </div>
+    <app-attendance-chart></app-attendance-chart>
+  </section>
+  
+  <div class="dashboard-content">
+    <app-leaverequest></app-leaverequest>
+  
+    <div class="section-container">
+      <app-tasks></app-tasks>
+      <app-present-employees [cardwidth]="'430px'"></app-present-employees>
+      <app-absent-employees [cardwidth]="'430px'"></app-absent-employees>
+    </div>
+  
+    <app-adminleaveapprove [cardHeight]="'530px'" [tbodyHeight]="'370px'"></app-adminleaveapprove>
+  </div>
+</div>
+  

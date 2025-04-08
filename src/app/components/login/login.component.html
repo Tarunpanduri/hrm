@@ -1,0 +1,48 @@
+<div class="login-container">
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <h2 style="margin-top: -210px;">CLIM IT SOLUTIONS</h2>
+      <h3 style="margin-top: 250px;">Plan includes</h3>
+      <ul>
+        <li>Unlimited employee uploads</li>
+        <li>Free forever</li>
+        <li>Full author permissions</li>
+        <li>Pro tips</li>
+      </ul>
+    </div>
+  
+    <!-- Right Panel -->
+    <div class="right-panel">
+      <h2>Sign in</h2>
+      <p>Sign in using your account with</p>
+  
+      <!-- Social Login Buttons -->
+      <div style="margin-top: -10px;" class="social-buttons">
+        <button class="social-button" (click)="signInWithGoogle()">
+            <i style="margin-right: 1px;" class="fab fa-google"></i>
+            oogle
+        </button >
+      </div>
+  
+      <p style="margin-top: 5px;">Or log in with your email address</p>
+
+          <!-- 🔹 Display Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  
+      <!-- Email & Password Inputs -->
+      <!-- Use formControlName instead of ngModel -->
+        <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+          <div class="input-group">
+            <input type="email" formControlName="email" placeholder="Email address">
+            <input type="password" formControlName="password" placeholder="Password">
+          </div>
+          
+          <!-- Sign-in Button (Use type="submit") -->
+          <button class="sign-in-button" type="submit">Sign in</button>
+        </form>
+
+    </div>
+  </div>
+  

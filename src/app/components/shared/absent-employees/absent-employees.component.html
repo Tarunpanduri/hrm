@@ -1,0 +1,16 @@
+<div class="container" [ngStyle]="{ width: cardwidth }">
+    <h3>Absent Employees</h3> <!-- or Absent Employees -->
+    <div class="scroll-container">
+        <div class="employee-card" *ngFor="let emp of absentEmployees">
+                    <img [src]="emp.profileImg" alt="{{ emp.name }}" />
+        <div class="info">
+          <h4>{{ emp.name }}</h4>
+          <span style="display: flex; flex-direction: row; justify-content: center;"><div style="font-weight: 600; margin-right: 5px;">ID: </div> {{ emp.emp_id }}</span>
+          <span style="display: flex; flex-direction: row; justify-content: center;"><div style="font-weight: 600; margin-right: 5px;">Dept:</div> {{ emp.department }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
