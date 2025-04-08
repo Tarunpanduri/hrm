@@ -36,10 +36,13 @@ import { ManagerdashboardComponent } from './components/managerdashboard/manager
 import { EmployeechartsComponent } from './components/employeecharts/employeecharts.component';
 import { PresentEmployeesComponent } from './components/shared/present-employees/present-employees.component';
 import { AbsentEmployeesComponent } from './components/shared/absent-employees/absent-employees.component';
-import { LayoutComponent } from './components/layout/layout.component';
+
 import { AdminlayoutComponent } from './components/adminlayout/adminlayout.component';
 import { DashboardPageComponent } from './components/adminlayout/dashboard-page/dashboard-page.component';
 import { HgjgComponent } from './components/hgjg/hgjg.component';
+import { LayoutComponent } from './components/managerdashboard/layout/layout.component';
+import { DashboardComponent } from './components/managerdashboard/layout/dashboard/dashboard.component';
+
 
 @NgModule({
   declarations: [
@@ -58,10 +61,11 @@ import { HgjgComponent } from './components/hgjg/hgjg.component';
     TasksComponent,
     PresentEmployeesComponent,
     AbsentEmployeesComponent,
-    LayoutComponent,
     AdminlayoutComponent,
     DashboardPageComponent,
-    HgjgComponent
+    HgjgComponent,
+    LayoutComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

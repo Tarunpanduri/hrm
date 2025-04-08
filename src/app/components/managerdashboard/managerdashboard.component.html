@@ -1,29 +1,14 @@
+
+    <!-- layout.component.html -->
+
 <div class="main" style="display: flex; flex-direction: row;">
-    <app-sidebar></app-sidebar>
-  
-    <div class="maint" style="display: flex; flex-direction: column; height: 100vh; width: 100%;">
-      <app-header></app-header>
-  
-      <div class="mainthree" style="flex-grow: 1; overflow: auto; padding: 10px;">
-        <!-- Stats Section -->
-        <section class="stats">
-          <div class="seco">
-            <app-checkin></app-checkin>
-          </div>
-          <app-attendance-chart></app-attendance-chart>
-        </section>
-        <div class="lr">
-          <app-adminleaveapprove [cardHeight]="'725px'" [tbodyHeight]="'560px'"></app-adminleaveapprove>
-          
-          
-          <div  class="section-container" >
-            <app-tasks></app-tasks>
-            <app-present-employees [cardwidth]="'450px'"></app-present-employees>
-            <app-absent-employees [cardwidth]="'450px'"></app-absent-employees>
+  <app-sidebar></app-sidebar>
 
-          </div>
+  <div class="maint" style="display: flex; flex-direction: column; height: 100vh; width: 100%;">
+    <app-header></app-header>
 
-        </div>
-        </div>
-      </div>
+    <div class="mainthree" style="flex-grow: 1; overflow: auto; padding: 10px;">
+      <router-outlet></router-outlet>
     </div>
+  </div>
+</div>

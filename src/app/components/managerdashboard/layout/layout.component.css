@@ -1,0 +1,9 @@
+.mainthree {
+
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
+  }
+  
+  .mainthree::-webkit-scrollbar {
+    display: none; 
+  }
