@@ -41,7 +41,7 @@ export class TasksComponent implements OnInit {
   constructor(private db: Database, private auth: Auth) {}
 
   async ngOnInit() {
-    const storedEmployee = localStorage.getItem('cachenull');
+    const storedEmployee = localStorage.getItem('fbhgkjwruguegi');
     if (storedEmployee) {
       this.currentUser = JSON.parse(storedEmployee);
       const role = this.currentUser.role?.toLowerCase();

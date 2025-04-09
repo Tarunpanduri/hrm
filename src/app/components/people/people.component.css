@@ -9,7 +9,6 @@
 .top-container {
   display: flex;
   flex-direction: row;
-  /* gap: 5px; */
   border: 2px solid #ced4da;
   height: 218px;
   padding: 10px;
@@ -303,4 +302,93 @@
   background-color: #fbefdb; /* Moccasin (Soft Orange) */
   color: #8b4513; /* Saddle Brown */
   border: 1px solid #8b4513;
+}
+
+
+
+/* Skeleton styles */
+.skeleton-card {
+  background-color: #e0e0e0;
+  width: 250px;
+  height: 168px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-chart {
+  width: 300px;
+  height: 195px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Skeleton for employee list */
+.skeleton-employee {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.skeleton-avatar {
+  width: 70px;
+  height: 70px;
+  background-color: #ccc;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-info {
+  flex: 2;
+  margin-left: 15px;
+}
+
+.skeleton-line {
+  height: 14px;
+  background-color: #ccc;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+.skeleton-line.long {
+  width: 80%;
+}
+
+.skeleton-location {
+  flex: 1;
+  height: 14px;
+  background-color: #ccc;
+  border-radius: 4px;
+  margin-right: 300px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-department {
+  width: 100px;
+  height: 28px;
+  background-color: #ccc;
+  border-radius: 5px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Skeleton animation */
+@keyframes pulse {
+  0% {
+    background-color: #e0e0e0;
+  }
+  50% {
+    background-color: #f5f5f5;
+  }
+  100% {
+    background-color: #e0e0e0;
+  }
 }

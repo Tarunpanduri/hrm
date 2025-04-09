@@ -35,6 +35,8 @@ export class LoginComponent implements OnInit {
   loading = false;
   errorMessage: string | null = null;
 
+  private readonly localKey = 'fbhgkjwruguegi';
+
   constructor(
     private auth: Auth,
     private router: Router,
@@ -47,18 +49,23 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required]
     });
 
-    // 🔁 Auto-login if user already exists in localStorage
-    const savedUser = localStorage.getItem('fbhgkjwruguegi');
+    // 🔁 Auto-login from localStorage
+    const savedUser = localStorage.getItem(this.localKey);
     if (savedUser) {
-      const employee = JSON.parse(savedUser);
-      const dept = employee.department?.toUpperCase();
+      try {
+        const employee: Employee = JSON.parse(savedUser);
+        const dept = employee.department?.toUpperCase();
 
-      if (dept === 'HR') {
-        this.router.navigate(['/admin-dashboard']);
-      } else if (dept === 'MANAGEMENT') {
-        this.router.navigate(['/manager']);
-      } else {
-        this.router.navigate(['/employee']);
+        if (dept === 'HR') {
+          this.router.navigate(['/admin-dashboard']);
+        } else if (dept === 'MANAGEMENT') {
+          this.router.navigate(['/manager']);
+        } else {
+          this.router.navigate(['/employee-dashboard']);
+        }
+      } catch (e) {
+        console.error('⚠️ Invalid local storage data:', e);
+        localStorage.removeItem(this.localKey);
       }
     }
   }
@@ -89,23 +96,16 @@ export class LoginComponent implements OnInit {
 
         if (employee) {
           console.log('✅ Verified Employee via personal_mail:', employee);
-          localStorage.setItem('fbhgkjwruguegi', JSON.stringify(employee));
+          localStorage.setItem(this.localKey, JSON.stringify(employee));
 
-          const dept = employee.department?.toUpperCase();
-          if (dept === 'HR') {
-            this.router.navigate(['/admin-dashboard']);
-          } else if (dept === 'MANAGEMENT') {
-            this.router.navigate(['/manager']);
-          } else {
-            this.router.navigate(['/employee-dashboard']);
-          }
+          await this.delayedRedirect(employee);
         } else {
           console.log('❌ Unauthorized user, signing out...');
           this.errorMessage = 'Unauthorized user. Access denied.';
           await this.auth.signOut();
 
           try {
-            await user.delete(); // May throw due to recent login requirement
+            await user.delete(); // Optional: clean up
           } catch (deleteError) {
             console.warn('⚠️ Could not auto-delete unauthorized account:', deleteError);
           }
@@ -168,32 +168,37 @@ export class LoginComponent implements OnInit {
       if (snapshot.exists()) {
         const employees = snapshot.val();
         const employeeList: Employee[] = Object.values(employees) as Employee[];
-
         const employee = employeeList.find(emp => emp.email === user.email);
 
-        if (employee && 'department' in employee) {
+        if (employee && employee.department) {
           console.log('✅ Employee Found:', employee);
-          localStorage.setItem('fbhgkjwruguegi', JSON.stringify(employee));
+          localStorage.setItem(this.localKey, JSON.stringify(employee));
 
-          const dept = employee.department?.toUpperCase();
-          if (dept === 'HR') {
-            this.router.navigate(['/admin-dashboard']);
-          } else if (dept === 'MANAGEMENT') {
-            this.router.navigate(['/manager']);
-          } else {
-            this.router.navigate(['/employee-dashboard']);
-          }
+          await this.delayedRedirect(employee);
         } else {
-          console.log('❌ User not found in employee database.');
           this.errorMessage = 'No associated employee record found.';
         }
       } else {
-        console.log('❌ No employee data available.');
         this.errorMessage = 'Employee database is empty.';
       }
     } catch (error) {
       console.error('❌ Error fetching user role:', error);
       this.errorMessage = 'Error fetching user data. Please try again later.';
+    }
+  }
+
+  // 🔁 Introduced delay to prevent guard issues
+  private async delayedRedirect(employee: Employee): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve, 1000)); // 200ms delay
+
+    const dept = employee.department?.toUpperCase();
+
+    if (dept === 'HR') {
+      this.router.navigate(['/admin-dashboard']);
+    } else if (dept === 'MANAGEMENT') {
+      this.router.navigate(['/manager']);
+    } else {
+      this.router.navigate(['/employee']);
     }
   }
 }
