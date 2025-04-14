@@ -12,7 +12,11 @@
   margin-top: -20px; 
   width: 430px;
 }
-
+@media (max-width: 1280px) {  
+.mainthree{
+  width: 1060px !important;
+}
+}
 
   
   .main-content {

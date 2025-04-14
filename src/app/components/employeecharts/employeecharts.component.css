@@ -1,3 +1,10 @@
+@media (max-width: 1280px) {  
+  .chart-container {
+    width: 290px !important;
+  }
+}
+
+
 .chart-container {
     width: 350px;
     height: 260px;
@@ -8,6 +15,7 @@
     border-radius: 5px;
     background-color: white;
     overflow: hidden;
+    flex-direction: row;
   }
   
   .chartssssssssss {

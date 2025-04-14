@@ -2,11 +2,11 @@
   <div class="content">
     <!-- Left Section -->
     <div class="section-left">
-      <button class="checkin-btn" (click)="checkIn()" [disabled]="checkinTime">Check in</button>
-      <p>check in: {{ checkinTime || '--:-- --' }}</p>
+      <button class="checkin-btn" (click)="checkIn()" [disabled]="checkinTime">clock in</button>
+      <p class=" gg">clock in: {{ checkinTime || '--:-- --' }}</p>
 
-      <button class="checkout-btn" (click)="checkOut()" [disabled]="!checkinTime || checkoutTime">Check out</button>
-      <p>check out: {{ checkoutTime || '--:-- --' }}</p>
+      <button class="checkout-btn" (click)="checkOut()" [disabled]="!checkinTime || checkoutTime">clock out</button>
+      <p class=" gg">clock out: {{ checkoutTime || '--:-- --' }}</p>
     </div>
 
     <!-- Right Section (Updated) -->

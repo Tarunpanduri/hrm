@@ -1,6 +1,29 @@
+@media (max-width: 1280px) {  
+  .dashboard-container {
+    width: 1025px !important;
+    padding: 15px !important;
+    margin-top: 3px !important;
+  }
+  .top-container {
+    height: 180px !important;
+  }
+  /* Department cards */
+.card {
+  width: 250px;
+  height: 148px !important;
+}
+.employee-card {
+height: 285px !important;
+}
+.skeleton-chart {
+border-radius: 0px !important;
+  height: 165px !important;
+}
+}
+
 .dashboard-container {
   padding: 20px;
-  width: 1330px;
+  width: 1320px;
   height: 70vh;
   margin-top: -20px;
 }

@@ -31,14 +31,29 @@ export class DepartmentGuard implements CanActivate {
 
     try {
       const employee: Employee = JSON.parse(storedUser);
-      const expectedDept = route.data['department']?.toUpperCase();
-      const userDept = employee.department?.toUpperCase();
+      const expectedDept = (route.data['department'] || '').toUpperCase();
+      const userDept = (employee.department || '').toUpperCase();
 
-      if (expectedDept === 'ADMIN' && userDept === 'HR') return true;
-      if (expectedDept === 'MANAGER' && userDept === 'MANAGEMENT') return true;
-      if (expectedDept === 'EMPLOYEE' && userDept !== 'HR' && userDept !== 'MANAGEMENT') return true;
+      console.log('🔍 Checking Access...');
+      console.log('Expected Department:', expectedDept);
+      console.log('User Department:', userDept);
 
-      console.warn(`⚠️ Department mismatch. Expected: ${expectedDept}, Found: ${userDept}`);
+      switch (expectedDept) {
+        case 'ADMIN':
+          if (userDept === 'HR') return true;
+          break;
+        case 'MANAGER':
+          if (userDept === 'MANAGEMENT') return true;
+          break;
+        case 'EMPLOYEE':
+          if (userDept !== 'HR' && userDept !== 'MANAGEMENT') return true;
+          break;
+        default:
+          console.warn('⚠️ Unknown department in route data');
+          break;
+      }
+
+      console.warn(`🚫 Access denied. Expected: ${expectedDept}, Found: ${userDept}`);
       return this.router.parseUrl('/');
     } catch (err) {
       console.error('❌ Failed to parse user from localStorage:', err);

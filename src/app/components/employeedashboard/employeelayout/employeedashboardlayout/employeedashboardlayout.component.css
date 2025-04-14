@@ -21,10 +21,12 @@
 
   
   .seco {
-    width: 40%;
+
     background-color: #ffffff;
     border: 2px solid #ced4da;
     border-radius: 5px; /* Rounds the corners */
+    display: flex;
+    flex-direction: row;
 }
 
 

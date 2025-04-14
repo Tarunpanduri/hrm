@@ -50,6 +50,8 @@ import { EmployeeSidebarComponent } from './components/shared/employee-sidebar/e
 import { EmployeelayoutComponent } from './components/employeedashboard/employeelayout/employeelayout.component';
 import { EmployeedashboardlayoutComponent } from './components/employeedashboard/employeelayout/employeedashboardlayout/employeedashboardlayout.component';
 import { ApplicantComponent } from './components/applicant-tracker/applicant/applicant.component';
+import { ManagersidebarComponent } from './components/shared/managersidebar/managersidebar.component';
+import { EmployeeReportComponent } from './components/employee-report/employee-report.component';
 
 
 @NgModule({
@@ -80,6 +82,8 @@ import { ApplicantComponent } from './components/applicant-tracker/applicant/app
     EmployeelayoutComponent,
     EmployeedashboardlayoutComponent,
     ApplicantComponent,
+    ManagersidebarComponent,
+    EmployeeReportComponent,
   ],
   imports: [
     BrowserModule,

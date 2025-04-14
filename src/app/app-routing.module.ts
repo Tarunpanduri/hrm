@@ -40,7 +40,9 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'HgjgComponent', component: HgjgComponent },
       { path: 'People', component: PeopleComponent },
-      { path: 'Applicant', component: ApplicantComponent }
+      { path: 'Applicant', component: ApplicantComponent },
+      { path: 'calender', component: HgjgComponent },
+
     ]
   },
   {

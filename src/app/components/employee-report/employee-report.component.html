@@ -1,0 +1,104 @@
+<div class="container">
+    <h2>📋 Employee Complete Report</h2>
+  
+    <div class="search-box">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter Employee ID</mat-label>
+        <input matInput [(ngModel)]="empId" (keyup.enter)="searchEmployee()" />
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="searchEmployee()">Search</button>
+      <button mat-raised-button color="accent" (click)="exportPDF()" [disabled]="!employee">Export PDF</button>
+    </div>
+  
+    <div *ngIf="employee" id="report">
+      <div class="card profile-card">
+        <img [src]="employee.profileImg" alt="Profile" class="profile-img" />
+        <div>
+          <h3>{{ employee.name }} ({{ employee.emp_id }})</h3>
+          <p><strong>Role:</strong> {{ employee.role }}</p>
+          <p><strong>Department:</strong> {{ employee.department }}</p>
+          <p><strong>Email:</strong> {{ employee.email }}</p>
+          <p><strong>Location:</strong> {{ employee.location }}</p>
+          <p><strong>Joining Date:</strong> {{ employee.joiningDate }}</p>
+        </div>
+      </div>
+  
+      <div class="card chart-card">
+        <h4>📊 Attendance Overview</h4>
+        <echarts [options]="attendanceChartOptions" class="chart-container"></echarts>
+      </div>
+  
+      <div class="card">
+        <h4>📅 Leave History</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Reason</th>
+              <th>Status</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Days</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let leave of leaves">
+              <td>{{ leave.type }}</td>
+              <td>{{ leave.reason }}</td>
+              <td>{{ leave.status }}</td>
+              <td>{{ leave.startDate }}</td>
+              <td>{{ leave.endDate }}</td>
+              <td>{{ leave.days }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <div class="card">
+        <h4>✅ Tasks Assigned</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Due Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let task of tasks">
+              <td>{{ task.title }}</td>
+              <td>{{ task.description }}</td>
+              <td>{{ task.dueDate }}</td>
+              <td>{{ task.completed ? 'Completed' : 'Pending' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <div class="card">
+        <h4>💸 Payroll Summary (Latest Months)</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Basic Salary</th>
+              <th>Bonus</th>
+              <th>Net Pay</th>
+              <th>Payment Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let entry of payroll | keyvalue">
+              <td>{{ entry.key }}</td>
+              <td>{{ entry.value.basicSalary }}</td>
+              <td>{{ entry.value.bonus }}</td>
+              <td>{{ entry.value.netPay }}</td>
+              <td>{{ entry.value.paymentDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  

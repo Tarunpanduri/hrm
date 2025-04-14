@@ -1,3 +1,9 @@
+@media (max-width: 1280px) {  
+  .container {
+  height: 1400px !important;
+  }
+}
+
 
 /* ===== Container ===== */
 .container {

@@ -31,6 +31,7 @@
     "firebase": "^9.23.0",
     "highcharts": "^12.1.2",
     "highcharts-angular": "^4.0.1",
+    "jspdf": "^3.0.1",
     "ngx-echarts": "^19.0.0",
     "ngx-skeleton-loader": "^10.0.0",
     "rxjs": "~7.8.0",

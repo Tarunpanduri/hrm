@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { getDatabase, ref, get } from 'firebase/database';
 
 @Component({
@@ -22,6 +22,11 @@ export class AttendanceChartComponent implements OnInit {
     await this.fetchData();
     this.generateCharts();
     this.cdRef.detectChanges();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.generateCharts(); // Regenerate charts with new font size
   }
 
   async fetchData() {
@@ -65,9 +70,8 @@ export class AttendanceChartComponent implements OnInit {
           : now;
 
         const workingMilliseconds = checkoutDate.getTime() - checkinDate.getTime();
-        const workingHours = workingMilliseconds / (1000 * 60 * 60); // convert ms to hours
+        const workingHours = workingMilliseconds / (1000 * 60 * 60);
 
-        // Only count if valid
         if (workingHours > 0 && workingHours < 24) {
           this.workingHoursByDepartment[department] =
             (this.workingHoursByDepartment[department] || 0) + parseFloat(workingHours.toFixed(2));
@@ -77,10 +81,9 @@ export class AttendanceChartComponent implements OnInit {
   }
 
   generateCharts() {
-    const departments = Object.keys(this.attendanceByDepartment);
-    const attendanceValues = Object.values(this.attendanceByDepartment);
-    const workingHourValues = Object.values(this.workingHoursByDepartment);
+    const fontSize = this.getResponsiveFontSize();
 
+    const departments = Object.keys(this.attendanceByDepartment);
     const pieChartData = departments.map((dept) => ({
       name: dept,
       value: this.attendanceByDepartment[dept]
@@ -91,7 +94,7 @@ export class AttendanceChartComponent implements OnInit {
         text: `Department-wise Attendance (${this.getCurrentDate()})`,
         left: 'center',
         bottom: 1,
-        textStyle: { fontSize: 12 }
+        textStyle: { fontSize }
       },
       series: [
         {
@@ -110,7 +113,6 @@ export class AttendanceChartComponent implements OnInit {
       ]
     };
 
-    // Assign different colors manually
     const colors = ['#5470C6', '#91CC75', '#FAC858', '#EE6666', '#73C0DE', '#3BA272'];
 
     this.barChartOptions = {
@@ -118,7 +120,7 @@ export class AttendanceChartComponent implements OnInit {
         text: `Total Working Hours Per Department (${this.getCurrentDate()})`,
         left: 'center',
         bottom: 1,
-        textStyle: { fontSize: 12 }
+        textStyle: { fontSize }
       },
       tooltip: { trigger: 'axis' },
       xAxis: {
@@ -145,7 +147,6 @@ export class AttendanceChartComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  // Strict date construction using today's date
   convertTimeToDate(timeStr: string): Date {
     const [timePart, modifier] = timeStr.split(" ");
     let [hours, minutes] = timePart.split(":").map(Number);
@@ -154,8 +155,7 @@ export class AttendanceChartComponent implements OnInit {
     if (modifier === 'AM' && hours === 12) hours = 0;
 
     const now = new Date();
-    const date = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0);
-    return date;
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0);
   }
 
   getCurrentDate(): string {
@@ -164,5 +164,15 @@ export class AttendanceChartComponent implements OnInit {
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  // ✅ Responsive font size based on screen width
+  getResponsiveFontSize(): number {
+    const width = window.innerWidth;
+
+    if (width <= 480) return 8;
+    if (width <= 768) return 9;
+    if (width <= 1280) return 10;
+    return 14;
   }
 }
