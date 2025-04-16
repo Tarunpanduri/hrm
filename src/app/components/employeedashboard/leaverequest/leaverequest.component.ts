@@ -9,6 +9,8 @@ import { Database, ref, get, set, push, onValue } from '@angular/fire/database';
 })
 export class LeaverequestComponent implements OnInit {
   @Input() cardheight: string = 'auto'; 
+  @Input() cardwidth: string = 'auto'; 
+
 
   darkMode: boolean = false;
   leaveRequests: any[] = [];

@@ -40,6 +40,7 @@ import { ManagerdashboardComponent } from './components/managerdashboard/manager
 import { EmployeechartsComponent } from './components/employeecharts/employeecharts.component';
 import { PresentEmployeesComponent } from './components/shared/present-employees/present-employees.component';
 import { AbsentEmployeesComponent } from './components/shared/absent-employees/absent-employees.component';
+import { PayslipViewerComponent } from './components/payslip-viewer/payslip-viewer.component';
 
 import { AdminlayoutComponent } from './components/adminlayout/adminlayout.component';
 import { DashboardPageComponent } from './components/adminlayout/dashboard-page/dashboard-page.component';
@@ -86,7 +87,8 @@ import { WorkdayUploaderComponent } from './components/workday-uploader/workday-
     ApplicantComponent,
     ManagersidebarComponent,
     EmployeeReportComponent,
-    WorkdayUploaderComponent
+    WorkdayUploaderComponent,
+    PayslipViewerComponent
   ],
   imports: [
     BrowserModule,

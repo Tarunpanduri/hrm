@@ -1,0 +1,166 @@
+<div class="payslip-container" [ngStyle]="{ height: cardheighttt }"   [ngStyle]="{ width: cardwidth }">
+    <h2 class="title">Monthly Pay Slip Bills</h2>
+    <hr class="section-divider">
+  
+    <div class="month-grid" *ngIf="payrollData && (payrollData | keyvalue).length > 0; else noPayslips">
+      <div *ngFor="let month of payrollData | keyvalue" class="month-box">
+        <div class="month-row">
+          <span class="month-name">{{ month.key }}</span>
+          <div class="button-group">
+            <button class="view-btn" (click)="viewPayslip(month.key)">View</button>
+            <button class="download-btn" (click)="downloadPayslip(month.key)">Download</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <ng-template #noPayslips>
+      <div class="no-payslips-message">
+        <p>No payslips available.</p>
+      </div>
+    </ng-template>
+    
+  
+    <!-- PDF Modal -->
+    <div class="pdf-modal" *ngIf="selectedMonthForView">
+      <div class="modal-overlay" (click)="closePreview()"></div>
+      <div class="modal-content">
+        <h3>Payslip Preview - {{ selectedMonthForView }}</h3>
+        <iframe [src]="previewPdfUrl" class="pdf-frame" width="100%" height="500px"></iframe>
+        <div class="modal-buttons">
+          <button class="close-btn" (click)="closePreview()">Close</button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Enter Payslip Popup -->
+    <div class="container">
+        <!-- Button to Open Popup for HR/Management -->
+        <button *ngIf="isHRorManager" (click)="openPopup()">Enter Payslip Details</button>
+      
+        <!-- Popup Form (Center of Screen) -->
+        <div class="popup" *ngIf="showPopup">
+          <div class="popup-content">
+            <span class="close-btn" (click)="closePopup()">&times;</span>
+            
+            <h2>Enter Payslip Details</h2>
+            <form [formGroup]="payslipForm" (ngSubmit)="savePayslip()">
+
+                
+              
+              <div class="form-row">
+                <label for="month_year">Month / Year:</label>
+                <input id="month_year" formControlName="month_year" placeholder="e.g., Oct 2024" />
+              </div>
+              
+              <div class="form-row">
+                <label for="basicSalary">Basic Salary:</label>
+                <input id="basicSalary" type="number" formControlName="basicSalary" placeholder="Basic Salary" />
+              </div>
+              
+              <div class="form-row">
+                <label for="bonus">Bonus:</label>
+                <input id="bonus" type="number" formControlName="bonus" placeholder="Bonus" />
+              </div>
+      
+              <div class="form-row">
+                <label for="da">Dearness Allowance (DA):</label>
+                <input id="da" type="number" formControlName="da" placeholder="DA" />
+              </div>
+      
+              <div class="form-row">
+                <label for="hra">HRA:</label>
+                <input id="hra" type="number" formControlName="hra" placeholder="HRA" />
+              </div>
+      
+              <div class="form-row">
+                <label for="conveyanceAllowance">Conveyance Allowance:</label>
+                <input id="conveyanceAllowance" type="number" formControlName="conveyanceAllowance" placeholder="Conveyance Allowance" />
+              </div>
+      
+              <div class="form-row">
+                <label for="travelReimbursement">Travel Reimbursement:</label>
+                <input id="travelReimbursement" type="number" formControlName="travelReimbursement" placeholder="Travel Reimbursement" />
+              </div>
+      
+              <div class="form-row">
+                <label for="foodCoupons">Food Coupons:</label>
+                <input id="foodCoupons" type="number" formControlName="foodCoupons" placeholder="Food Coupons" />
+              </div>
+      
+              <div class="form-row">
+                <label for="communicationAllowance">Communication Allowance:</label>
+                <input id="communicationAllowance" type="number" formControlName="communicationAllowance" placeholder="Communication Allowance" />
+              </div>
+      
+              <div class="form-row">
+                <label for="netPay">Net Pay:</label>
+                <input id="netPay" type="number" formControlName="netPay" placeholder="Net Pay" />
+              </div>
+      
+              <div class="form-row">
+                <label for="otherDeductions">Other Deductions:</label>
+                <input id="otherDeductions" type="number" formControlName="otherDeductions" placeholder="Other Deductions" />
+              </div>
+      
+              <div class="form-row">
+                <label for="pfDeduction">PF Deduction:</label>
+                <input id="pfDeduction" type="number" formControlName="pfDeduction" placeholder="PF Deduction" />
+              </div>
+      
+              <div class="form-row">
+                <label for="professionalTax">Professional Tax:</label>
+                <input id="professionalTax" type="number" formControlName="professionalTax" placeholder="Professional Tax" />
+              </div>
+      
+              <div class="form-row">
+                <label for="incomeTax">Income Tax:</label>
+                <input id="incomeTax" type="number" formControlName="incomeTax" placeholder="Income Tax" />
+              </div>
+      
+              <div class="form-row">
+                <label for="specialAllowance">Special Allowance:</label>
+                <input id="specialAllowance" type="number" formControlName="specialAllowance" placeholder="Special Allowance" />
+              </div>
+      
+              <div class="form-row">
+                <label for="status">Status:</label>
+                <select id="status" formControlName="status">
+                  <option value="Paid">Paid</option>
+                  <option value="Pending">Pending</option>
+                </select>
+              </div>
+      
+              <div class="form-row">
+                <label for="paymentDate">Payment Date:</label>
+                <input id="paymentDate" type="date" formControlName="paymentDate" />
+              </div>
+      
+              <div class="form-row">
+                <label for="actualPayableDays">Actual Payable Days:</label>
+                <input id="actualPayableDays" type="number" formControlName="actualPayableDays" placeholder="Actual Payable Days" />
+              </div>
+      
+              <div class="form-row">
+                <label for="totalWorkingDays">Total Working Days:</label>
+                <input id="totalWorkingDays" type="number" formControlName="totalWorkingDays" placeholder="Total Working Days" />
+              </div>
+      
+              <div class="form-row">
+                <label for="lossOfPayDays">Loss of Pay Days:</label>
+                <input id="lossOfPayDays" type="number" formControlName="lossOfPayDays" placeholder="Loss of Pay Days" />
+              </div>
+      
+              <div class="form-row">
+                <label for="daysPayable">Days Payable:</label>
+                <input id="daysPayable" type="number" formControlName="daysPayable" placeholder="Days Payable" />
+              </div>
+              <img src="../../assets/CLIM-IT-SOLUTIONS_final.png">
+              <button type="submit" [disabled]="payslipForm.invalid">Save Payslip</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+  </div>
+  
