@@ -9,6 +9,8 @@ import { Database, ref, get, update } from '@angular/fire/database';
 })
 export class AdminleaveapproveComponent implements OnInit {
   @Input() cardHeight: string = 'auto';
+
+  @Input() cardwidth: string = 'auto';
   @Input() tbodyHeight: string = 'auto';
   leaveRequests: any[] = [];
   private db: Database;

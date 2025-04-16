@@ -5,10 +5,11 @@ import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 
@@ -52,6 +53,7 @@ import { EmployeedashboardlayoutComponent } from './components/employeedashboard
 import { ApplicantComponent } from './components/applicant-tracker/applicant/applicant.component';
 import { ManagersidebarComponent } from './components/shared/managersidebar/managersidebar.component';
 import { EmployeeReportComponent } from './components/employee-report/employee-report.component';
+import { WorkdayUploaderComponent } from './components/workday-uploader/workday-uploader.component';
 
 
 @NgModule({
@@ -84,6 +86,7 @@ import { EmployeeReportComponent } from './components/employee-report/employee-r
     ApplicantComponent,
     ManagersidebarComponent,
     EmployeeReportComponent,
+    WorkdayUploaderComponent
   ],
   imports: [
     BrowserModule,
@@ -92,6 +95,7 @@ import { EmployeeReportComponent } from './components/employee-report/employee-r
     ReactiveFormsModule,
     HighchartsChartModule,
     MatFormFieldModule,
+    MatInputModule,
     MatSelectModule,
     BrowserAnimationsModule,
     FullCalendarModule,

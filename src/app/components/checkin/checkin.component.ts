@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy,Input } from '@angular/core';
 import { Database, ref, onValue, set, update } from '@angular/fire/database';
 import { AttendanceService } from '../../services/attendance/attendance.service';
 
@@ -9,6 +9,8 @@ import { AttendanceService } from '../../services/attendance/attendance.service'
   styleUrls: ['./checkin.component.css']
 })
 export class CheckinComponent implements OnInit, OnDestroy {
+  @Input() cardwidth: string = 'auto'; 
+
   currentTime: string = '';
   currentDate: string = '';
   checkinTime: string | null = null;
@@ -76,32 +78,32 @@ export class CheckinComponent implements OnInit, OnDestroy {
 
   async loadWeeklyAttendanceData() {
     if (!this.emp_Id) return;
-
+  
     const now = new Date();
     const startOfWeek = new Date(now);
     startOfWeek.setDate(now.getDate() - now.getDay());
     startOfWeek.setHours(0, 0, 0, 0);
-
+  
     let totalWorkedHours = 0;
     const promises = [];
-
+  
     for (let i = 0; i < 7; i++) {
       const date = new Date(startOfWeek);
       date.setDate(startOfWeek.getDate() + i);
       const dateString = date.toISOString().split('T')[0];
-
+  
       const attendanceRef = ref(this.db, `attendance/${dateString}/${this.emp_Id}`);
-
+  
       promises.push(
         new Promise<void>((resolve) => {
           onValue(attendanceRef, (snapshot) => {
             if (snapshot.exists()) {
               const data = snapshot.val();
-
+  
               if (data.checkin && data.checkout) {
                 const checkinTime = this.parseTimeString(data.checkin, date);
                 const checkoutTime = this.parseTimeString(data.checkout, date);
-
+  
                 if (checkinTime && checkoutTime && checkoutTime > checkinTime) {
                   totalWorkedHours += (checkoutTime.getTime() - checkinTime.getTime()) / (1000 * 60 * 60);
                 }
@@ -112,28 +114,40 @@ export class CheckinComponent implements OnInit, OnDestroy {
         })
       );
     }
-
+  
     await Promise.all(promises);
-    this.weeklyWorkedHours = Math.round(totalWorkedHours);
+  
+    // Convert total worked hours to minutes
+    const totalWorkedMinutes = totalWorkedHours * 60;
+  
+    // Round down to nearest 0.5 hour increment
+    const roundedHours = Math.floor(totalWorkedMinutes / 30) * 0.5;
+  
+    // Set the rounded value
+    this.weeklyWorkedHours = roundedHours;
     console.log("Total worked hours:", this.weeklyWorkedHours);
   }
+  
+
+
 
   parseTimeString(timeString: string, date: Date): Date | null {
-    const match = timeString.match(/(\d+):(\d+) (AM|PM)/);
+    const match = timeString.match(/(\d{1,2}):(\d{2}) ?(AM|PM)/i); // added `i` flag
     if (!match) return null;
-
+  
     let hours = parseInt(match[1]);
     const minutes = parseInt(match[2]);
-    const period = match[3];
-
+    const period = match[3].toUpperCase(); // ensure uppercase
+  
     if (period === "PM" && hours !== 12) hours += 12;
     if (period === "AM" && hours === 12) hours = 0;
-
+  
     const parsedDate = new Date(date);
     parsedDate.setHours(hours, minutes, 0, 0);
-
+  
     return parsedDate;
   }
+  
 
   startLiveTodayWorkedUpdate() {
     if (this.todayWorkedInterval) {

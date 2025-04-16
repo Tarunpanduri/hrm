@@ -2,15 +2,10 @@
 
     scrollbar-width: none; 
     -ms-overflow-style: none; 
-  }
+   }
   
   .mainthree::-webkit-scrollbar {
     display: none; 
   }
 
-  @media (max-width: 1280px) {  
-    .mainthree{
-      width: 66.4rem;
-    }
 
-  }

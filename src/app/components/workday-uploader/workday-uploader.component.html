@@ -1,0 +1,17 @@
+<!-- src/app/workday-uploader/workday-uploader.component.html -->
+<div class="uploader-container">
+    <h2>Upload & Update Workday Excel</h2>
+  
+    <form [formGroup]="form" (ngSubmit)="updateExcel()">
+      <input type="file" accept=".xlsx" (change)="onFileChange($event)" required />
+  
+      <input type="text" placeholder="Sheet Name (e.g., Apr 2nd Week)" formControlName="sheetName" required />
+      <input type="date" formControlName="date" required />
+      <input type="text" placeholder="Morning Tasks" formControlName="morning" required />
+      <input type="text" placeholder="Afternoon Tasks" formControlName="afternoon" required />
+      <input type="text" placeholder="Status" formControlName="status" required />
+  
+      <button type="submit">Update Excel</button>
+    </form>
+  </div>
+  

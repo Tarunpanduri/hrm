@@ -168,15 +168,12 @@ export class TasksComponent implements OnInit {
 
   shouldHideTask(task: any): boolean {
     if (!task.completed || !task.completedAt) return false;
-
-    const completedDate = new Date(task.completedAt);
-    const today = new Date();
-
-    // Strip time part
-    completedDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-
-    // Hide if completed today or before
-    return completedDate <= today;
-  }
+  
+    const completedTime = new Date(task.completedAt).getTime();
+    const now = new Date().getTime();
+  
+    const hoursPassed = (now - completedTime) / (1000 * 60 * 60); // Convert ms to hours
+  
+    return hoursPassed >= 72; // Hide after 72 hours
+  }  
 }
