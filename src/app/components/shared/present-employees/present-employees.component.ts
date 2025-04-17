@@ -9,12 +9,16 @@ import { FirebaseDataService } from '../../..//services/attendance/firebase-data
 })
 export class PresentEmployeesComponent implements OnInit {
   @Input() cardwidth: string = 'auto'; 
+  isLoading: boolean = true;
 
   presentEmployees: any[] = [];
 
   constructor(private firebaseService: FirebaseDataService) {}
 
   ngOnInit(): void {
+    setTimeout(() => {
+      this.isLoading = false; // Simulate data loading
+    }, 2000);
     this.firebaseService.getEmployeeAndAttendanceData().subscribe(({ employees, attendance }) => {
       const allEmployees = Object.values(employees || {});
       const presentEmpIds = Object.keys(attendance || {});

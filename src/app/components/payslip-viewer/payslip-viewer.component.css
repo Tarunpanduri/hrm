@@ -15,6 +15,11 @@
   margin-bottom: 25px;
   font-size: 24px;
 }
+.container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /* Month Box Styling */
 .month-box {
@@ -116,6 +121,10 @@
 }
 .no-payslips-message{
   text-align: center;
+  font-weight: 600;
+  margin-top: 100px;
+  margin-bottom: 100px;
+
 }
 .section-divider {
   border: none;

@@ -47,7 +47,6 @@
 
 .leave-list-container {
   min-height: 300px;
-  max-height: 300px; 
   overflow-y: auto;
   border: 1px solid #ddd;
   border-radius: 8px;

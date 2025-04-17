@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Database, ref, set, get, child, update, remove } from '@angular/fire/database';
+import { Database,getDatabase, ref, set, get, child, update, remove } from '@angular/fire/database';
 import { Applicant } from '../models/applicant';
 
 @Injectable({ providedIn: 'root' })
@@ -58,5 +58,10 @@ export class ApplicantService {
         }
       }
     }
+  }
+
+  async saveEmployee(empId: string, data: any) {
+    const db = getDatabase();
+    await set(ref(db, 'employees/' + empId), data);
   }
 }

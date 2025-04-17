@@ -20,8 +20,8 @@ declare module 'jspdf' {
   styleUrl: './payslip-viewer.component.css'
 })
 export class PayslipViewerComponent implements OnInit {
+  @Input() cardwidth: string = 'auto';
   @Input() cardheighttt: string = 'auto'; 
-  @Input() cardwidth: string = 'auto'; 
   empId: string = '';
   payrollData: PayrollData = {};
   selectedMonthForView: string | null = null;

@@ -68,7 +68,7 @@
       </select>
     </div>
 
-    <div class="leave-list-container">
+    <div class="leave-list-container" [ngStyle]="{ height: cardhehight }" >
       <ng-container *ngIf="filteredLeaves().length > 0; else noLeaves">
         <ul class="leave-list">
           <li class="list-group-item" *ngFor="let leave of filteredLeaves()">

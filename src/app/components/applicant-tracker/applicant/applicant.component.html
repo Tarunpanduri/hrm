@@ -1,18 +1,19 @@
 <div class="container">
-    <div class="header">
-      <div>
-        <h3>Application tracker</h3>
-        <p>Here's your selection process overview.</p>
-      </div>
-      <button (click)="openModal()" class="add-btn">+ Add applicant</button>
+  <div class="header" style="margin-bottom: 30px;">
+    <div>
+      <h2>Application tracker</h2>
+      <p>Here's your selection process overview.</p>
     </div>
-  
-    <div class="columns">
-      <div class="column" *ngFor="let status of ['Applied', 'Interviewed', 'Made offer', 'Hired']">
-        <h3>{{ status }}</h3>
-  
+    <button (click)="openModal()" class="add-btn">+ Add applicant</button>
+  </div>
+
+  <div class="columns">
+    <div class="column" *ngFor="let status of ['Applied', 'Interviewed', 'Made Offer', 'Hired']">
+      <h3>{{ status }}</h3>
+
+      <div class="scroll-area">
         <div *ngIf="filterByStatus(status).length === 0" class="empty">No applicants</div>
-  
+
         <div class="card" *ngFor="let app of filterByStatus(status)">
           <div class="card-header">
             <div class="card-info">
@@ -20,26 +21,31 @@
               <div class="email">
                 <a href="mailto:{{ app.email }}">{{ app.email }}</a>
               </div>
-  
+
               <div class="tags">
                 <span class="tag location">{{ app.location }}</span>
                 <span class="tag role">{{ app.role }}</span>
                 <span class="tag department">{{ app.department }}</span>
               </div>
             </div>
-  
+
             <div class="menu">
               <button #menuButton (click)="toggleOptions(app)">&#8942;</button>
-  
-              <div *ngIf="selectedApplicant === app" #popup class="options">
+
+              <div *ngIf="selectedApplicant === app" class="options">
                 <button *ngIf="status !== 'Hired'" (click)="removeApplicant(app)">Remove</button>
                 <button *ngIf="status !== 'Hired'" (click)="showChangeStatus = app">Change Status</button>
-                <button *ngIf="status === 'Hired'" (click)="removeApplicant(app)">Delete</button>
               </div>
-  
-              <div *ngIf="showChangeStatus === app" #popup class="status-popup">
+              <!-- Inside your options popup -->
+              <div class="status-popup" *ngIf="selectedApplicant === app">
+                <button (click)="removeApplicant(app)">Remove</button>
+                <button *ngIf="app.status === 'Hired'" (click)="openOnboardForm(app)">Add to Onboard</button>
+              </div>
+
+
+              <div *ngIf="showChangeStatus === app" class="status-popup">
                 <p>Change status to:</p>
-                <button *ngFor="let newStatus of ['Applied', 'Interviewed', 'Made offer', 'Hired']"
+                <button *ngFor="let newStatus of ['Applied', 'Interviewed', 'Made Offer', 'Hired']"
                         (click)="changeStatus(app, newStatus)">
                   {{ newStatus }}
                 </button>
@@ -50,27 +56,71 @@
         </div>
       </div>
     </div>
-  
-    <div class="modal" *ngIf="showModal">
-      <div class="modal-content">
-        <h3>Add New Applicant</h3>
-        <input [(ngModel)]="newApplicant.name" placeholder="Name" />
-        <input [(ngModel)]="newApplicant.email" placeholder="Email" />
-        <input [(ngModel)]="newApplicant.location" placeholder="Location" />
-        <input [(ngModel)]="newApplicant.role" placeholder="Role" />
-        <input [(ngModel)]="newApplicant.department" placeholder="Department" />
-        <select [(ngModel)]="newApplicant.status">
-          <option>Applied</option>
-          <option>Interviewed</option>
-          <option>Made offer</option>
-          <option>Hired</option>
-        </select>
-  
-        <div class="modal-buttons">
-            <button class="cancel-btn" (click)="closeModal()">Cancel</button>
-          <button class="submit-btn" (click)="submitApplicant()">Submit</button>
-        </div>
+  </div>
+
+  <!-- Modal for Add Applicant -->
+  <div class="modal" *ngIf="showModal">
+    <div class="modal-content">
+      <h2>Add New Applicant</h2>
+      <hr class="modal-dividerers" />
+      <input [(ngModel)]="newApplicant.name" placeholder="Name" />
+      <input [(ngModel)]="newApplicant.email" placeholder="Email" />
+      <input [(ngModel)]="newApplicant.location" placeholder="Location" />
+      <input [(ngModel)]="newApplicant.role" placeholder="Role" />
+      <input [(ngModel)]="newApplicant.department" placeholder="Department" />
+      <select [(ngModel)]="newApplicant.status">
+        <option>Applied</option>
+        <option>Interviewed</option>
+        <option>Made Offer</option>
+        <option>Hired</option>
+      </select>
+
+      <div class="modal-buttons">
+        <button class="cancel-btn" (click)="closeModal()">Cancel</button>
+        <button class="submit-btn" (click)="submitApplicant()">Submit</button>
       </div>
     </div>
   </div>
+
+  <!-- Add to Onboard Modal -->
+<div class="onboard-modal" *ngIf="onboardModal">
+  <div class="onboard-content">
+    <h2 style="font-size: 25px; margin-bottom: 20px;">Add to Onboard</h2>
+    <hr class="modal-divider" />
+    <form (ngSubmit)="submitOnboarding()" #onboardForm="ngForm">
+      <input type="text" placeholder="Name" [(ngModel)]="onboardingData.name" name="name" required />
+      <input type="text" placeholder="Education Details" [(ngModel)]="onboardingData.educational_details" name="educational_details" />
+      <input type="text" placeholder="Personal Email" [(ngModel)]="onboardingData.personalEmail" name="personalEmail" required />
+      <input type="text" placeholder="Department" [(ngModel)]="onboardingData.department" name="department" required />
+      <input type="text" placeholder="Employee ID" [(ngModel)]="onboardingData.emp_id" name="emp_id" required />
+      <div class="input-group">
+        <label for="dateofBirth">Date of Birth</label>
+        <input type="date"
+        id="dateofBirth" name="dateofBirth"
+        [(ngModel)]="onboardingData.dateofBirth" required
+        />
+      </div>  
+      <input type="text" placeholder="Blood Group" [(ngModel)]="onboardingData.bloodGroup" name="bloodGroup" required />
+      <input type="text" placeholder="Location" [(ngModel)]="onboardingData.location" name="location" />
+      <input type="text" placeholder="Role" [(ngModel)]="onboardingData.role" name="role" />
+      <div class="input-group">
+        <label for="joiningDate">Date of Joining</label>
+        <input type="date"
+        id="joiningDate" name="joiningDate"
+        [(ngModel)]="onboardingData.joiningDate" required
+        />
+      </div>      
+      <input type="email" placeholder="Official Email" [(ngModel)]="onboardingData.email" name="email" required />
+      <input type="text" placeholder="Profile Image URL" [(ngModel)]="onboardingData.profileImg" name="profileImg" />
+      <input type="text" placeholder="CTC" [(ngModel)]="onboardingData.CTC" name="CTC" />
+
+      <div class="onboard-buttons">
+        <button type="button" class="cancel-btn" (click)="closeOnboardForm()">Cancel</button>
+        <button type="submit" class="submit-btn">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
   
+</div>

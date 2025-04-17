@@ -89,6 +89,56 @@ export class ApplicantComponent implements OnInit {
     this.showChangeStatus = null;
     this.loadApplicants();
   }
+  
+  onboardModal = false;
+onboardingData: any = {
+  department: '',
+  educational_details: '',
+  email: '',
+  emp_id: '',
+  joiningDate: '',
+  dateofBirth: '',
+  location: '',
+  name: '',
+  profileImg: '',
+  bloodGroup:'',
+  personalEmail: '',
+  role: '',
+  status: 'Hired',
+  CTC: ''
+};
+
+openOnboardForm(app: Applicant) {
+  this.onboardModal = true;
+  this.onboardingData = {
+    department: app.department || '',
+    educational_details: '',
+    email: '',
+    emp_id: 'EMP' + Math.floor(Math.random() * 10000), // or use a generator
+    joiningDate: '',
+    location: app.location || '',
+    personal_mail: app.email,
+    name: app.name,
+    dateofBirth: '',
+    profileImg: '',
+    bloodGroup:'',
+    role: app.role,
+    status: 'Active',
+    CTC: ''
+  };
+}
+
+closeOnboardForm() {
+  this.onboardModal = false;
+}
+
+async submitOnboarding() {
+  const empId = this.onboardingData.emp_id;
+  await this.applicantService.saveEmployee(empId, this.onboardingData);
+  this.onboardModal = false;
+  this.onboardingData = {};
+}
+
 
   @HostListener('document:click', ['$event'])
   clickOutside(event: MouseEvent) {
