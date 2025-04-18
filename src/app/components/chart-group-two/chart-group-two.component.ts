@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { getDatabase, ref, onValue, get, Database, set } from 'firebase/database';
+import { getDatabase, ref, get } from 'firebase/database';
 import { EChartsOption } from 'echarts';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { KeyValue } from '@angular/common';
 
 declare module 'jspdf' {
   interface jsPDF {
@@ -23,13 +24,15 @@ export class ChartGroupTwoComponent implements OnInit {
   pieChartOptions: EChartsOption | null = null;
   chartOptions: EChartsOption | null = null;
   
-  payrollData: any = {};
+  payrollData: { [key: string]: any } = {};
   totalExpensesPerMonth: { [key: string]: number } = {};
   attendanceByDepartment: { [key: string]: number } = {};
   
-  // Add these properties
   selectedMonthForView: string = '';
   previewPdfUrl: SafeResourceUrl | null = null;
+  currentYear: string = new Date().getFullYear().toString();
+  showPdfViewer: boolean = false;
+  pdfBlobUrl: string | null = null;
 
   constructor(private sanitizer: DomSanitizer) {}
 
@@ -40,62 +43,86 @@ export class ChartGroupTwoComponent implements OnInit {
     this.generateCharts();
   }
 
-  // For download
-  async downloadPayslip(month: string) {
-    const doc = await this.generatePayslipPdf(month);
-    doc.save(`Payslip_${month}.pdf`);
+  getObjectKeysLength(obj: any): number {
+    return obj ? Object.keys(obj).length : 0;
   }
 
-  // For preview
-  async viewPayslip(month: string) {
-    this.selectedMonthForView = month;
-    const doc = await this.generatePayslipPdf(month);
-    const pdfBlob = doc.output('blob');
-    const blobUrl = URL.createObjectURL(pdfBlob);
-    this.previewPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl);
+  originalOrder = (a: KeyValue<string, any>, b: KeyValue<string, any>): number => {
+    return 0;
   }
 
   async fetchPayrollData() {
-    const db = getDatabase();
-    const payrollRef = ref(db, 'payroll');
-    const snapshot = await get(payrollRef);
-    if (snapshot.exists()) {
-      this.payrollData = snapshot.val();
+    try {
+      const db = getDatabase();
+      const payrollRef = ref(db, 'payroll');
+      const snapshot = await get(payrollRef);
+      
+      if (snapshot.exists()) {
+        const allPayrollData = snapshot.val();
+        const employeeData = localStorage.getItem('fbhgkjwruguegi');
+        const employee = employeeData ? JSON.parse(employeeData) : {};
+        
+        if (!employee?.emp_id) {
+          console.error('Employee data not found in localStorage');
+          this.payrollData = {};
+          return;
+        }
+        
+        this.payrollData = allPayrollData[employee.emp_id] || {};
+      }
+    } catch (error) {
+      console.error('Error fetching payroll data:', error);
+      this.payrollData = {};
     }
   }
 
   calculateTotalExpenses() {
-    for (const empId in this.payrollData) {
-      const employeePayroll = this.payrollData[empId];
-
-      for (const monthYear in employeePayroll) {
-        const payroll = employeePayroll[monthYear];
-
-        const total = (payroll.basicSalary || 0) +
-                      (payroll.bonus || 0) +
-                      (payroll.hra || 0) +
-                      (payroll.pfDeduction || 0) +
-                      (payroll.communicationAllowance || 0) +
-                      (payroll.conveyanceAllowance || 0) +
-                      (payroll.foodCoupons || 0) +
-                      (payroll.travelReimbursement || 0) +
-                      (payroll.specialAllowance || 0) +
-                      (payroll.professionalTax || 0);
-
-        this.totalExpensesPerMonth[monthYear] = (this.totalExpensesPerMonth[monthYear] || 0) + total;
+    this.totalExpensesPerMonth = {};
+    
+    if (!this.payrollData || Object.keys(this.payrollData).length === 0) {
+      console.warn('No payroll data available');
+      return;
+    }
+  
+    // Iterate through each month's payroll data
+    for (const monthYear in this.payrollData) {
+      // Extract month and year from keys like "April_2025" or "May 2025"
+      const [monthName, year] = monthYear.split(/_|\s/); // Split by underscore or space
+      
+      // Check if the record belongs to current year
+      if (year === this.currentYear) {
+        const payroll = this.payrollData[monthYear];
+        
+        // Convert month name to number (1-12)
+        const monthNumber = new Date(`${monthName} 1, ${year}`).getMonth() + 1;
+        const monthKey = monthNumber.toString().padStart(2, '0'); // "04" for April
+        
+        // Calculate total for this month
+        this.totalExpensesPerMonth[monthKey] = 
+          (payroll.basicSalary || 0) +
+          (payroll.hra || 0) +
+          (payroll.conveyanceAllowance || 0) +
+          (payroll.communicationAllowance || 0) +
+          (payroll.foodCoupons || 0) +
+          (payroll.travelReimbursement || 0) +
+          (payroll.specialAllowance || 0) +
+          (payroll.bonus || 0);
+          
+        console.log(`Month ${monthKey} (${monthName}): ${this.totalExpensesPerMonth[monthKey]}`);
       }
     }
+  
+    console.log('Total expenses per month:', this.totalExpensesPerMonth);
   }
 
   async fetchAttendanceByDepartment() {
     const db = getDatabase();
     const today = this.getFormattedDate();
 
-    const attendanceRef = ref(db, `attendance/${today}`);
-    const attendanceSnap = await get(attendanceRef);
-
-    const employeeRef = ref(db, 'employees');
-    const employeeSnap = await get(employeeRef);
+    const [attendanceSnap, employeeSnap] = await Promise.all([
+      get(ref(db, `attendance/${today}`)),
+      get(ref(db, 'employees'))
+    ]);
 
     const tempDeptCount: { [key: string]: number } = {};
 
@@ -104,10 +131,9 @@ export class ChartGroupTwoComponent implements OnInit {
       const employeeData = employeeSnap.val();
 
       for (const empId in attendanceData) {
-        const attendanceInfo = attendanceData[empId];
-        if (attendanceInfo.status === 'Present') {
+        if (attendanceData[empId].status === 'Present') {
           const empDetails = employeeData[empId];
-          if (empDetails && empDetails.department) {
+          if (empDetails?.department) {
             const dept = empDetails.department;
             tempDeptCount[dept] = (tempDeptCount[dept] || 0) + 1;
           }
@@ -118,52 +144,87 @@ export class ChartGroupTwoComponent implements OnInit {
     this.attendanceByDepartment = tempDeptCount;
   }
 
-  
-
   generateCharts() {
-    const months = Object.keys(this.totalExpensesPerMonth);
-    const expenses = months.map(month => this.totalExpensesPerMonth[month]);
+    // 1. Monthly Expenses Chart
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const expensesData = Array(12).fill(0);
+    
+    // Fill the expenses data array with actual values
+    Object.entries(this.totalExpensesPerMonth).forEach(([monthNum, amount]) => {
+      const monthIndex = parseInt(monthNum) - 1; // Convert month number (1-12) to array index (0-11)
+      if (monthIndex >= 0 && monthIndex < 12) {
+        expensesData[monthIndex] = amount;
+      }
+    });
 
     this.chartOptions = {
-      title: {
-        text: 'Company Payroll Expenses Per Month',
-        left: 'center'
+      title: { 
+        text: `Monthly Payroll Expenses (${this.currentYear})`, 
+        left: 'center',
+        textStyle: {
+          fontSize: 16,
+          fontWeight: 'bold'
+        }
       },
-      tooltip: {
-        trigger: 'axis'
+      tooltip: { 
+        trigger: 'axis',
+        formatter: (params: any) => {
+          const month = monthNames[params[0].dataIndex];
+          const value = params[0].value;
+          return `${month}: ₹${value.toLocaleString('en-IN')}`;
+        }
       },
       xAxis: {
         type: 'category',
-        data: months,
-        axisLabel: {
-          rotate: 45
+        data: monthNames,
+        axisLabel: { 
+          rotate: 45,
+          interval: 0
         }
       },
       yAxis: {
         type: 'value',
         name: 'Expenses (INR)',
-        axisLabel: {
-          formatter: '{value}'
+        axisLabel: { 
+          formatter: (value: number) => '₹' + value.toLocaleString('en-IN')
         }
       },
-      series: [
-        {
-          name: 'Total Expenses',
-          type: 'bar',
-          data: expenses,
-          itemStyle: {
-            color: '#5470C6'
+      series: [{
+        name: 'Total Expenses',
+        type: 'bar',
+        data: expensesData,
+        itemStyle: { 
+          color: '#5470C6',
+          borderRadius: [5, 5, 0, 0]
+        },
+        barWidth: '60%',
+        label: {
+          show: false,
+          position: 'top',
+          formatter: (params: any) => {
+            return params.value > 0 ? '₹' + params.value.toLocaleString('en-IN') : '';
           },
-          barWidth: '50%'
+          color: '#333'
+        },
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
         }
-      ]
+      }],
+      grid: {
+        containLabel: true,
+        left: '3%',
+        right: '3%',
+        bottom: '15%',
+        top: '20%'
+      }
     };
 
-    const departments = Object.keys(this.attendanceByDepartment);
-    const pieChartData = departments.map((dept) => ({
-      name: dept,
-      value: this.attendanceByDepartment[dept]
-    }));
+    // 2. Department Attendance Chart
+    const pieChartData = Object.entries(this.attendanceByDepartment).map(([name, value]) => ({ name, value }));
 
     this.pieChartOptions = {
       title: {
@@ -172,43 +233,66 @@ export class ChartGroupTwoComponent implements OnInit {
         bottom: 1,
         textStyle: { fontSize: 14 }
       },
-      tooltip: {
-        trigger: 'item'
-      },
-      series: [
-        {
-          name: 'Present Employees',
-          type: 'pie',
-          radius: '50%',
-          data: pieChartData,
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
-          }
+      tooltip: { 
+        trigger: 'item',
+        formatter: (params: any) => {
+          return `${params.name}: ${params.value} (${params.percent}%)`;
         }
-      ]
-    };
+      },
+      series: [{
+        name: 'Present Employees',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 10,
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: {
+          show: false  // Hide labels
+        },
+        emphasis: {
+          label: {
+            show: false // Also hide on emphasis
+          }
+        },
+        labelLine: {
+          show: false // Hide label lines
+        },
+        data: pieChartData
+      }]
+    };    
   }
 
-  getCurrentDate(): string {
+  async downloadPayslip(month: string) {
+    const doc = await this.generatePayslipPdf(month);
+    doc.save(`Payslip_${month}.pdf`);
+  }
+
+  async viewPayslip(month: string) {
+    this.selectedMonthForView = month;
+    const doc = await this.generatePayslipPdf(month);
+    
+    // Generate blob URL
+    const pdfBlob = doc.output('blob');
+    this.pdfBlobUrl = URL.createObjectURL(pdfBlob);
+    
+    // Open in new tab
+    window.open(this.pdfBlobUrl, '_blank');
+  }
+
+  private getCurrentDate(): string {
+    return new Date().toLocaleDateString('en-GB');
+  }
+
+  private getFormattedDate(): string {
     const now = new Date();
-    return now.toLocaleDateString('en-GB');
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
   }
 
-  getFormattedDate(): string {
-    const now = new Date();
-    const yyyy = now.getFullYear();
-    const mm = String(now.getMonth() + 1).padStart(2, '0');
-    const dd = String(now.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
-  }
-
-  async generatePayslipPdf(month: string): Promise<jsPDF> {
+  private async generatePayslipPdf(month: string): Promise<jsPDF> {
     const employee = JSON.parse(localStorage.getItem('fbhgkjwruguegi') || '{}');
-    console.log('PayslipTS : ', employee);
     const payroll = this.payrollData[month];
     const doc = new jsPDF();
 
@@ -441,11 +525,11 @@ export class ChartGroupTwoComponent implements OnInit {
     }) || '0.00';
   }
 
-  sum(values: number[]): number {
+  private sum(values: number[]): number {
     return values.reduce((acc, val) => acc + (val || 0), 0);
   }
 
-  numberToWords(num: number): string {
+  private numberToWords(num: number): string {
     const a = [
       '', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
       'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen',
