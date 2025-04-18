@@ -58,6 +58,8 @@ import { ManagersidebarComponent } from './components/shared/managersidebar/mana
 import { EmployeeReportComponent } from './components/employee-report/employee-report.component';
 import { WorkdayUploaderComponent } from './components/workday-uploader/workday-uploader.component';
 import { ChartGroupTwoComponent } from './components/chart-group-two/chart-group-two.component';
+import { MobileNotSupportedComponent } from './mobile-not-supported.component';
+
 
 
 @NgModule({
@@ -92,7 +94,8 @@ import { ChartGroupTwoComponent } from './components/chart-group-two/chart-group
     EmployeeReportComponent,
     WorkdayUploaderComponent,
     PayslipViewerComponent,
-    ChartGroupTwoComponent
+    ChartGroupTwoComponent,
+    MobileNotSupportedComponent
   ],
   imports: [
     BrowserModule,

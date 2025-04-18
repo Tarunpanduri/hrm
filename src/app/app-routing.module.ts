@@ -13,10 +13,11 @@ import { EmployeedashboardlayoutComponent } from './components/employeedashboard
 import { ApplicantComponent } from './components/applicant-tracker/applicant/applicant.component';
 
 import { DepartmentGuard } from './auth/department.guard'; // 👈 import your guard
+import { MobileNotSupportedComponent } from './mobile-not-supported.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
-
+  { path: 'mobile-not-supported', component: MobileNotSupportedComponent },
   {
     path: 'admin-dashboard',
     component: AdminlayoutComponent,

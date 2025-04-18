@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CalendarOptions } from '@fullcalendar/core';
+import { CalendarOptions, DateSelectArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { Database, ref, onValue } from '@angular/fire/database';
@@ -15,6 +15,7 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
 export class HgjgComponent implements OnInit {
   @ViewChild('fullcalendar') calendarComponent!: FullCalendarComponent;
   selectedDateInput: string = '';
+  private db: Database = inject(Database);
 
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridMonth',
@@ -24,6 +25,7 @@ export class HgjgComponent implements OnInit {
     eventClassNames: (arg) => {
       if (arg.event.extendedProps['isLeave']) return ['leave-event'];
       if (arg.event.extendedProps['isHoliday']) return ['holiday-event'];
+      if (arg.event.extendedProps['isBirthday']) return ['birthday-event'];
       return [];
     },
     headerToolbar: {
@@ -31,17 +33,18 @@ export class HgjgComponent implements OnInit {
       center: 'title',
       right: 'dayGridMonth,dayGridWeek,dayGridDay'
     },
-    datesSet: this.onDatesSet.bind(this) // detect month change
+    datesSet: this.onDatesSet.bind(this)
   };
 
-  private db: Database = inject(Database);
   leaveRequests: any[] = [];
   employeeMap: any = {};
   selectedDateLeaves: any[] = [];
+  selectedDateBirthdays: any[] = [];
   leaveDates: Set<string> = new Set();
   isWeekendClicked: boolean = false;
   currentMonthHolidays: any[] = [];
-isLoading: any;
+  birthdayEventMap: { [date: string]: any[] } = {};
+  todayDate: string = new Date().toISOString().split('T')[0];
 
   ngOnInit() {
     const leaveRef = ref(this.db, 'leaveRequests');
@@ -52,71 +55,92 @@ isLoading: any;
       const empData = empSnap.val();
       if (empData) {
         this.employeeMap = {};
+        const birthdayMap: { [date: string]: any[] } = {};
+
         for (let empId in empData) {
-          this.employeeMap[empId] = {
-            ...empData[empId],
-            employeeId: empId
-          };
+          const employee = empData[empId];
+          this.employeeMap[empId] = { ...employee, employeeId: empId };
+
+          const dob = employee.dateofBirth;
+          if (dob) {
+            const formattedDob = new Date(dob).toISOString().split('T')[0];
+            if (!birthdayMap[formattedDob]) {
+              birthdayMap[formattedDob] = [];
+            }
+            birthdayMap[formattedDob].push({
+              name: employee.name,
+              profileImg: employee.profileImg || 'https://via.placeholder.com/40'
+            });
+          }
         }
-      }
 
-      onValue(leaveRef, (leaveSnap) => {
-        const leaveData = leaveSnap.val();
-        const formattedLeaves: any[] = [];
-        const calendarEvents: any[] = [];
+        this.birthdayEventMap = birthdayMap;
 
-        for (let empId in leaveData) {
-          const employeeLeaves = leaveData[empId];
-          for (let leaveId in employeeLeaves) {
-            const leave = employeeLeaves[leaveId];
-            if (leave.status === 'Approved') {
-              const employee = this.employeeMap[empId];
-              const leaveEntry = {
-                id: leaveId,
-                employeeId: empId,
-                ...leave,
-                employeeDetails: employee || null
-              };
-              formattedLeaves.push(leaveEntry);
+        const birthdayEvents = Object.entries(birthdayMap).map(([date, list]) => ({
+          title: '🎂',
+          start: date,
+          allDay: true,
+          display: 'auto',
+          classNames: ['birthday-event'],
+          extendedProps: {
+            isBirthday: true,
+            birthdayList: list
+          }
+        }));
 
-              const leaveStart = new Date(leave.startDate);
-              const leaveEnd = leave.endDate ? new Date(leave.endDate) : new Date(leave.startDate);
+        onValue(leaveRef, (leaveSnap) => {
+          const leaveData = leaveSnap.val();
+          const calendarEvents: any[] = [];
 
-              for (
-                let d = new Date(leaveStart);
-                d <= leaveEnd;
-                d.setDate(d.getDate() + 1)
-              ) {
-                const day = d.getDay();
-                const isWeekend = day === 0 || day === 6;
-                if (!isWeekend) {
-                  const dateStr = new Date(d).toISOString().split('T')[0];
-                  this.leaveDates.add(dateStr);
-                  calendarEvents.push({
-                    title: 'Away',
-                    start: dateStr,
-                    allDay: true,
-                    display: 'background',
-                    backgroundColor: '#ff0000', // Full red
-                    textColor: '#ffffff',       // White title text
-                    classNames: ['leave-event'], // Add a custom class
-                    extendedProps: {
-                      isLeave: true
-                    }
-                  });
+          for (let empId in leaveData) {
+            const employeeLeaves = leaveData[empId];
+            for (let leaveId in employeeLeaves) {
+              const leave = employeeLeaves[leaveId];
+              if (leave.status === 'Approved') {
+                const employee = this.employeeMap[empId];
+                const leaveEntry = {
+                  id: leaveId,
+                  employeeId: empId,
+                  ...leave,
+                  employeeDetails: employee || null
+                };
+                this.leaveRequests.push(leaveEntry);
+
+                const leaveStart = new Date(leave.startDate);
+                const leaveEnd = leave.endDate ? new Date(leave.endDate) : leaveStart;
+
+                for (let d = new Date(leaveStart); d <= leaveEnd; d.setDate(d.getDate() + 1)) {
+                  const day = d.getDay();
+                  if (day !== 0 && day !== 6) {
+                    const dateStr = new Date(d).toISOString().split('T')[0];
+                    this.leaveDates.add(dateStr);
+                    calendarEvents.push({
+                      title: 'Away',
+                      start: dateStr,
+                      allDay: true,
+                      backgroundColor: '#ff0000',
+                      textColor: '#ffffff',
+                      classNames: ['leave-event'],
+                      extendedProps: { isLeave: true }
+                    });
+                  }
                 }
               }
             }
           }
-        }
 
-        this.leaveRequests = formattedLeaves;
+          this.fetchHolidays(currentYear).then((holidayEvents) => {
+            this.calendarOptions.events = [
+              ...calendarEvents,
+              ...holidayEvents,
+              ...birthdayEvents
+            ];
 
-        // fetch all holiday events for calendar view only
-        this.fetchHolidays(currentYear).then((holidayEvents) => {
-          this.calendarOptions.events = [...calendarEvents, ...holidayEvents];
+            // 🔥 Default load today's data after events setup
+            this.selectDateDetails(this.todayDate);
+          });
         });
-      });
+      }
     });
   }
 
@@ -130,9 +154,7 @@ isLoading: any;
     for (let month of months) {
       const monthRef = ref(this.db, `${year}/${month}`);
       const snapshot = await new Promise<any>((resolve) => {
-        onValue(monthRef, (snap) => resolve(snap.val()), {
-          onlyOnce: true,
-        });
+        onValue(monthRef, (snap) => resolve(snap.val()), { onlyOnce: true });
       });
 
       if (snapshot) {
@@ -143,9 +165,7 @@ isLoading: any;
               start: holiday.date,
               allDay: true,
               backgroundColor: '#28a745',
-              extendedProps: {
-                isHoliday: true
-              }
+              extendedProps: { isHoliday: true }
             });
           }
         });
@@ -157,48 +177,49 @@ isLoading: any;
 
   onDateClick(arg: any) {
     const clickedDate = arg.dateStr;
-    const clickedDay = new Date(clickedDate).getDay();
+    this.selectDateDetails(clickedDate);
+  }
+
+  selectDateDetails(dateStr: string) {
+    const clickedDay = new Date(dateStr).getDay();
     this.isWeekendClicked = (clickedDay === 0 || clickedDay === 6);
 
     if (this.isWeekendClicked) {
       this.selectedDateLeaves = [];
+      this.selectedDateBirthdays = [];
       return;
     }
 
     this.selectedDateLeaves = this.leaveRequests.filter((leave) => {
-      return clickedDate >= leave.startDate && clickedDate <= leave.endDate;
+      return dateStr >= leave.startDate && dateStr <= leave.endDate;
     });
+
+    this.selectedDateBirthdays = this.birthdayEventMap[dateStr] || [];
   }
 
-  goToSelectedDate() {
-    if (!this.selectedDateInput) return;
-
-    const calendarApi = this.calendarComponent.getApi();
-    calendarApi.gotoDate(this.selectedDateInput);
-  }
-
-  // 🔥 Fetch monthly holidays when calendar month changes
   async onDatesSet(arg: any) {
-  const middleDate = new Date((arg.start.getTime() + arg.end.getTime()) / 2);
-  const year = middleDate.getFullYear();
-  const monthIndex = middleDate.getMonth(); // 0 = January
+    const middleDate = new Date((arg.start.getTime() + arg.end.getTime()) / 2);
+    const year = middleDate.getFullYear();
+    const monthIndex = middleDate.getMonth();
 
-  const monthName = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ][monthIndex];
+    const monthName = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ][monthIndex];
 
-  const monthRef = ref(this.db, `${year}/${monthName}`);
-  const snapshot = await new Promise<any>((resolve) => {
-    onValue(monthRef, (snap) => resolve(snap.val()), {
-      onlyOnce: true
+    const monthRef = ref(this.db, `${year}/${monthName}`);
+    const snapshot = await new Promise<any>((resolve) => {
+      onValue(monthRef, (snap) => resolve(snap.val()), { onlyOnce: true });
     });
-  });
 
-  this.currentMonthHolidays = [];
+    this.currentMonthHolidays = snapshot ? Object.values(snapshot) : [];
 
-  if (snapshot) {
-    this.currentMonthHolidays = Object.values(snapshot);
+    // 👇 Detect if "Today" button was clicked
+    const calendarApi = this.calendarComponent.getApi();
+    const currentDate = calendarApi.getDate().toISOString().split('T')[0];
+
+    if (currentDate === this.todayDate) {
+      this.selectDateDetails(this.todayDate);
+    }
   }
-}
 }

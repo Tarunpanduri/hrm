@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { Database, ref, get, set, update, remove} from '@angular/fire/database';
 import { Applicant } from '../models/applicant';
 
 @Injectable({ providedIn: 'root' })
 export class ApplicantService {
-  constructor(private db: AngularFireDatabase) {}
+  constructor(private db: Database) {}
 
   async addApplicant(applicant: Applicant) {
-    const applicantsRef = this.db.database.ref('applicants');
+    const applicantsRef = ref(this.db, 'applicants');
+    const snapshot = await get(applicantsRef);
 
-    const snapshot = await applicantsRef.get();
     let nextKey = 'applicant1';
 
     if (snapshot.exists()) {
@@ -23,25 +23,22 @@ export class ApplicantService {
       nextKey = `applicant${max + 1}`;
     }
 
-    return this.db.object(`applicants/${nextKey}`).set({ ...applicant, id: nextKey });
+    const applicantRef = ref(this.db, `applicants/${nextKey}`);
+    return set(applicantRef, { ...applicant, id: nextKey });
   }
 
   async getApplicants(): Promise<Applicant[]> {
-    const snapshot = await this.db.database.ref('applicants').get();
-    if (snapshot.exists()) {
-      return Object.values(snapshot.val()) as Applicant[];
-    }
-    return [];
+    const snapshot = await get(ref(this.db, 'applicants'));
+    return snapshot.exists() ? Object.values(snapshot.val()) as Applicant[] : [];
   }
 
   async removeApplicant(email: string) {
-    const ref = this.db.database.ref('applicants');
-    const snapshot = await ref.get();
-    if (snapshot.exists()) {
-      const applicants = snapshot.val();
+    const applicantsSnap = await get(ref(this.db, 'applicants'));
+    if (applicantsSnap.exists()) {
+      const applicants = applicantsSnap.val();
       for (const [key, value] of Object.entries<any>(applicants)) {
         if (value.email === email) {
-          await this.db.database.ref(`applicants/${key}`).remove();
+          await remove(ref(this.db, `applicants/${key}`));
           break;
         }
       }
@@ -49,13 +46,12 @@ export class ApplicantService {
   }
 
   async updateStatus(email: string, newStatus: string) {
-    const ref = this.db.database.ref('applicants');
-    const snapshot = await ref.get();
-    if (snapshot.exists()) {
-      const applicants = snapshot.val();
+    const applicantsSnap = await get(ref(this.db, 'applicants'));
+    if (applicantsSnap.exists()) {
+      const applicants = applicantsSnap.val();
       for (const [key, value] of Object.entries<any>(applicants)) {
         if (value.email === email) {
-          await this.db.database.ref(`applicants/${key}`).update({ status: newStatus });
+          await update(ref(this.db, `applicants/${key}`), { status: newStatus });
           break;
         }
       }
@@ -63,7 +59,6 @@ export class ApplicantService {
   }
 
   async saveEmployee(empId: string, data: any) {
-    await this.db.database.ref(`employees/${empId}`).set(data);
+    await set(ref(this.db, `employees/${empId}`), data);
   }
-  
 }

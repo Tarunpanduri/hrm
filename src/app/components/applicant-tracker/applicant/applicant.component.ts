@@ -8,8 +8,13 @@ import {
 } from '@angular/core';
 import { ApplicantService } from '../services/applicant.service';
 import { Applicant } from '../models/applicant';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
+import {
+  Database,
+  ref,
+  get,
+  update
+} from '@angular/fire/database';
 
 @Component({
   selector: 'app-applicant',
@@ -54,14 +59,14 @@ export class ApplicantComponent implements OnInit {
     role: '',
     status: 'Hired',
     CTC: '',
-    password: '' // Added password field for Firebase auth
+    password: ''
   };
 
   constructor(
     private applicantService: ApplicantService,
     private eRef: ElementRef,
-    private afAuth: AngularFireAuth, // Added Firebase Auth
-    private db: AngularFireDatabase // Added Firebase Realtime Database
+    private auth: Auth,
+    private db: Database // ✅ Updated to use modular Database
   ) {}
 
   ngOnInit() {
@@ -86,8 +91,8 @@ export class ApplicantComponent implements OnInit {
       this.filteredHiredApplicants = this.filterByStatus('Hired');
     } else {
       const searchTerm = this.hiredSearchTerm.toLowerCase();
-      this.filteredHiredApplicants = this.filterByStatus('Hired').filter(app => 
-        app.name.toLowerCase().includes(searchTerm) || 
+      this.filteredHiredApplicants = this.filterByStatus('Hired').filter(app =>
+        app.name.toLowerCase().includes(searchTerm) ||
         app.email.toLowerCase().includes(searchTerm)
       );
     }
@@ -146,7 +151,7 @@ export class ApplicantComponent implements OnInit {
       role: app.role,
       status: 'Active',
       CTC: '',
-      password: '' // Initialize password field
+      password: ''
     };
   }
 
@@ -156,51 +161,50 @@ export class ApplicantComponent implements OnInit {
 
   async submitOnboarding() {
     try {
-      // Create Firebase auth account
-      await this.afAuth.createUserWithEmailAndPassword(
+      await createUserWithEmailAndPassword(
+        this.auth,
         this.onboardingData.email,
         this.onboardingData.password
       );
-  
-      // Save employee data (without password)
+
       const employeeData = { ...this.onboardingData };
       delete employeeData.password;
-  
+
       await this.applicantService.saveEmployee(this.onboardingData.emp_id, employeeData);
-  
-      // ✅ Updated department crew increment logic
+
       if (this.onboardingData.department) {
-        const departmentsRef = this.db.database.ref('climit/departments');
-        const snapshot = await departmentsRef.once('value');
-        const departments = snapshot.val();
-  
-        for (const key in departments) {
-          if (departments[key].name === this.onboardingData.department) {
-            const currentCrew = parseInt(departments[key].crew || '0', 10);
-            await this.db.database.ref(`climit/departments/${key}`).update({ crew: currentCrew + 1 });
-            break;
+        const departmentsRef = ref(this.db, 'climit/departments');
+        const snapshot = await get(departmentsRef);
+
+        if (snapshot.exists()) {
+          const departments = snapshot.val();
+
+          for (const key in departments) {
+            if (departments[key].name === this.onboardingData.department) {
+              const currentCrew = parseInt(departments[key].crew || '0', 10);
+              const deptRef = ref(this.db, `climit/departments/${key}`);
+              await update(deptRef, { crew: currentCrew + 1 });
+              break;
+            }
           }
         }
       }
-  
+
       this.onboardModal = false;
       this.onboardingData = {};
     } catch (error) {
       console.error('Onboarding error:', error);
     }
   }
-  
 
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent) {
     const isAddApplicantButton = (event.target as HTMLElement).closest('.add-btn');
-    
-    if (isAddApplicantButton) {
-      return;
-    }
 
-    const clickedInsideModal = 
-      (event.target as HTMLElement).closest('.modal-content') || 
+    if (isAddApplicantButton) return;
+
+    const clickedInsideModal =
+      (event.target as HTMLElement).closest('.modal-content') ||
       (event.target as HTMLElement).closest('.onboard-content');
 
     const clickedMenuBtn = (event.target as HTMLElement).closest('.menu');
