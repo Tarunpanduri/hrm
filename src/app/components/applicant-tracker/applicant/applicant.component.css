@@ -79,6 +79,7 @@ h3 {
   margin-left: auto;
 }
 
+
 .options,
 .status-popup {
   position: absolute;
@@ -93,14 +94,17 @@ h3 {
   flex-direction: column;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   min-width: 150px;
+  min-height: 20px;
 }
 
 .options button,
 .status-popup button {
   margin: 4px 0;
+  min-height: 30px;
   cursor: pointer;
   background: #f0f0f0;
   border: none;
+  text-align: center;
   border-radius: 4px;
   padding: 6px 10px;
   font-size: 14px;
@@ -146,15 +150,6 @@ h3 {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
-}
-
-.modal-dividerers {
-  border: none;
-  height: 1px;
-  margin-top: 13px;
-  margin-bottom: 15px;
-  background-color: #6e6262; 
-  width: 100%;
 }
 
 .modal-divider {
@@ -324,7 +319,7 @@ h3 {
   border: none;
   padding: 8px 14px;
   border-radius: 4px;
-  margin-right: 40px;
+  margin-right: 70px;
   cursor: pointer;
 }
 
@@ -335,8 +330,8 @@ h3 {
   padding: 8px 14px;
   border-radius: 4px;
   cursor: pointer;
-  margin-right: 10px;
-  margin-left: 50px;
+  margin-right: 30px;
+  margin-left: 60px;
 }
 
 
@@ -359,3 +354,23 @@ h3 {
   border-radius: 6px;
   border: 1px solid #ccc;
 }
+
+
+/* Add these new styles */
+.hired-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border-radius: 1px;
+  font-size: 14px;
+  width: 90%;
+  /* box-sizing: border-box; */
+}
+
+
+/* ... (rest of your existing CSS remains the same) ... */

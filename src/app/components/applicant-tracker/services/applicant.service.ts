@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Database,getDatabase, ref, set, get, child, update, remove } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { Applicant } from '../models/applicant';
 
 @Injectable({ providedIn: 'root' })
 export class ApplicantService {
-  constructor(private db: Database) {}
+  constructor(private db: AngularFireDatabase) {}
 
   async addApplicant(applicant: Applicant) {
-    const applicantsRef = ref(this.db, 'applicants');
+    const applicantsRef = this.db.database.ref('applicants');
 
-    const snapshot = await get(applicantsRef);
+    const snapshot = await applicantsRef.get();
     let nextKey = 'applicant1';
 
     if (snapshot.exists()) {
@@ -23,11 +23,11 @@ export class ApplicantService {
       nextKey = `applicant${max + 1}`;
     }
 
-    return set(ref(this.db, `applicants/${nextKey}`), { ...applicant, id: nextKey });
+    return this.db.object(`applicants/${nextKey}`).set({ ...applicant, id: nextKey });
   }
 
   async getApplicants(): Promise<Applicant[]> {
-    const snapshot = await get(child(ref(this.db), 'applicants'));
+    const snapshot = await this.db.database.ref('applicants').get();
     if (snapshot.exists()) {
       return Object.values(snapshot.val()) as Applicant[];
     }
@@ -35,12 +35,13 @@ export class ApplicantService {
   }
 
   async removeApplicant(email: string) {
-    const snapshot = await get(ref(this.db, 'applicants'));
+    const ref = this.db.database.ref('applicants');
+    const snapshot = await ref.get();
     if (snapshot.exists()) {
       const applicants = snapshot.val();
       for (const [key, value] of Object.entries<any>(applicants)) {
         if (value.email === email) {
-          await remove(ref(this.db, `applicants/${key}`));
+          await this.db.database.ref(`applicants/${key}`).remove();
           break;
         }
       }
@@ -48,12 +49,13 @@ export class ApplicantService {
   }
 
   async updateStatus(email: string, newStatus: string) {
-    const snapshot = await get(ref(this.db, 'applicants'));
+    const ref = this.db.database.ref('applicants');
+    const snapshot = await ref.get();
     if (snapshot.exists()) {
       const applicants = snapshot.val();
       for (const [key, value] of Object.entries<any>(applicants)) {
         if (value.email === email) {
-          await update(ref(this.db, `applicants/${key}`), { status: newStatus });
+          await this.db.database.ref(`applicants/${key}`).update({ status: newStatus });
           break;
         }
       }
@@ -61,7 +63,7 @@ export class ApplicantService {
   }
 
   async saveEmployee(empId: string, data: any) {
-    const db = getDatabase();
-    await set(ref(db, 'employees/' + empId), data);
+    await this.db.database.ref(`employees/${empId}`).set(data);
   }
+  
 }

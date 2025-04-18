@@ -8,6 +8,8 @@ import {
 } from '@angular/core';
 import { ApplicantService } from '../services/applicant.service';
 import { Applicant } from '../models/applicant';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 
 @Component({
   selector: 'app-applicant',
@@ -21,6 +23,9 @@ export class ApplicantComponent implements OnInit {
   selectedApplicant: any = null;
   showChangeStatus: any = null;
 
+  hiredSearchTerm: string = '';
+  filteredHiredApplicants: Applicant[] = [];
+
   @ViewChildren('menuButton') menuButtons!: QueryList<ElementRef>;
   @ViewChildren('popup') popups!: QueryList<ElementRef>;
 
@@ -29,13 +34,34 @@ export class ApplicantComponent implements OnInit {
     email: '',
     location: '',
     role: '',
-    department: '',
+    department: 'IT',
     status: 'Applied'
+  };
+
+  onboardModal = false;
+  onboardingData: any = {
+    department: '',
+    educational_details: '',
+    email: '',
+    emp_id: '',
+    joiningDate: '',
+    dateofBirth: '',
+    location: '',
+    name: '',
+    profileImg: '',
+    bloodGroup: '',
+    personal_mail: '',
+    role: '',
+    status: 'Hired',
+    CTC: '',
+    password: '' // Added password field for Firebase auth
   };
 
   constructor(
     private applicantService: ApplicantService,
-    private eRef: ElementRef
+    private eRef: ElementRef,
+    private afAuth: AngularFireAuth, // Added Firebase Auth
+    private db: AngularFireDatabase // Added Firebase Realtime Database
   ) {}
 
   ngOnInit() {
@@ -44,6 +70,7 @@ export class ApplicantComponent implements OnInit {
 
   async loadApplicants() {
     this.applicants = await this.applicantService.getApplicants();
+    this.filterHiredApplicants();
   }
 
   openModal() {
@@ -54,6 +81,18 @@ export class ApplicantComponent implements OnInit {
     this.showModal = false;
   }
 
+  filterHiredApplicants() {
+    if (!this.hiredSearchTerm) {
+      this.filteredHiredApplicants = this.filterByStatus('Hired');
+    } else {
+      const searchTerm = this.hiredSearchTerm.toLowerCase();
+      this.filteredHiredApplicants = this.filterByStatus('Hired').filter(app => 
+        app.name.toLowerCase().includes(searchTerm) || 
+        app.email.toLowerCase().includes(searchTerm)
+      );
+    }
+  }
+
   async submitApplicant() {
     await this.applicantService.addApplicant(this.newApplicant);
     this.closeModal();
@@ -62,7 +101,7 @@ export class ApplicantComponent implements OnInit {
       email: '',
       location: '',
       role: '',
-      department: '',
+      department: 'IT',
       status: 'Applied'
     };
     this.loadApplicants();
@@ -89,64 +128,87 @@ export class ApplicantComponent implements OnInit {
     this.showChangeStatus = null;
     this.loadApplicants();
   }
+
+  openOnboardForm(app: Applicant) {
+    this.onboardModal = true;
+    this.onboardingData = {
+      department: app.department || '',
+      educational_details: '',
+      email: '',
+      emp_id: 'CIS' + Math.floor(Math.random() * 10000),
+      joiningDate: '',
+      location: app.location || '',
+      personal_mail: app.email,
+      name: app.name,
+      dateofBirth: '',
+      profileImg: '',
+      bloodGroup: '',
+      role: app.role,
+      status: 'Active',
+      CTC: '',
+      password: '' // Initialize password field
+    };
+  }
+
+  closeOnboardForm() {
+    this.onboardModal = false;
+  }
+
+  async submitOnboarding() {
+    try {
+      // Create Firebase auth account
+      await this.afAuth.createUserWithEmailAndPassword(
+        this.onboardingData.email,
+        this.onboardingData.password
+      );
   
-  onboardModal = false;
-onboardingData: any = {
-  department: '',
-  educational_details: '',
-  email: '',
-  emp_id: '',
-  joiningDate: '',
-  dateofBirth: '',
-  location: '',
-  name: '',
-  profileImg: '',
-  bloodGroup:'',
-  personalEmail: '',
-  role: '',
-  status: 'Hired',
-  CTC: ''
-};
-
-openOnboardForm(app: Applicant) {
-  this.onboardModal = true;
-  this.onboardingData = {
-    department: app.department || '',
-    educational_details: '',
-    email: '',
-    emp_id: 'EMP' + Math.floor(Math.random() * 10000), // or use a generator
-    joiningDate: '',
-    location: app.location || '',
-    personal_mail: app.email,
-    name: app.name,
-    dateofBirth: '',
-    profileImg: '',
-    bloodGroup:'',
-    role: app.role,
-    status: 'Active',
-    CTC: ''
-  };
-}
-
-closeOnboardForm() {
-  this.onboardModal = false;
-}
-
-async submitOnboarding() {
-  const empId = this.onboardingData.emp_id;
-  await this.applicantService.saveEmployee(empId, this.onboardingData);
-  this.onboardModal = false;
-  this.onboardingData = {};
-}
-
+      // Save employee data (without password)
+      const employeeData = { ...this.onboardingData };
+      delete employeeData.password;
+  
+      await this.applicantService.saveEmployee(this.onboardingData.emp_id, employeeData);
+  
+      // ✅ Updated department crew increment logic
+      if (this.onboardingData.department) {
+        const departmentsRef = this.db.database.ref('climit/departments');
+        const snapshot = await departmentsRef.once('value');
+        const departments = snapshot.val();
+  
+        for (const key in departments) {
+          if (departments[key].name === this.onboardingData.department) {
+            const currentCrew = parseInt(departments[key].crew || '0', 10);
+            await this.db.database.ref(`climit/departments/${key}`).update({ crew: currentCrew + 1 });
+            break;
+          }
+        }
+      }
+  
+      this.onboardModal = false;
+      this.onboardingData = {};
+    } catch (error) {
+      console.error('Onboarding error:', error);
+    }
+  }
+  
 
   @HostListener('document:click', ['$event'])
-  clickOutside(event: MouseEvent) {
-    const clickedInsideComponent = this.eRef.nativeElement.contains(event.target);
-    const clickedMenuBtn = (event.target as HTMLElement)?.closest('.menu');
-    const clickedStatusPopup = (event.target as HTMLElement)?.closest('.status-popup');
+  handleClickOutside(event: MouseEvent) {
+    const isAddApplicantButton = (event.target as HTMLElement).closest('.add-btn');
+    
+    if (isAddApplicantButton) {
+      return;
+    }
 
-    if (!clickedInsideComponent || (!clickedMenuBtn && !clickedStatusPopup)) {
+    const clickedInsideModal = 
+      (event.target as HTMLElement).closest('.modal-content') || 
+      (event.target as HTMLElement).closest('.onboard-content');
+
+    const clickedMenuBtn = (event.target as HTMLElement).closest('.menu');
+    const clickedStatusPopup = (event.target as HTMLElement).closest('.status-popup');
+
+    if (!clickedInsideModal && !clickedMenuBtn && !clickedStatusPopup) {
+      this.showModal = false;
+      this.onboardModal = false;
       this.selectedApplicant = null;
       this.showChangeStatus = null;
     }

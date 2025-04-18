@@ -20,6 +20,8 @@ import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { DepartmentGuard } from './auth/department.guard';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+
 
 
 import { environment } from '../../environment';  
@@ -108,7 +110,8 @@ import { ChartGroupTwoComponent } from './components/chart-group-two/chart-group
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
     provideFirestore(() => getFirestore()),
-    provideStorage(() => getStorage())
+    provideStorage(() => getStorage()),
+    
   ],
   providers: [],
   bootstrap: [AppComponent]
