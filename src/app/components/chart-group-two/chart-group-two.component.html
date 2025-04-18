@@ -1,0 +1,51 @@
+<div class="chartssssssssss">
+  <!-- Bar Chart Skeleton or Actual -->
+  <div class="chart-container">
+    <ng-container *ngIf="!chartOptions; else barChart">
+      <div class="bar-skeleton">
+        <div class="bar-skeleton-bar bar1"></div>
+        <div class="bar-skeleton-bar bar2"></div>
+        <div class="bar-skeleton-bar bar3"></div>
+        <div class="bar-skeleton-bar bar4"></div>
+        <div class="bar-skeleton-bar bar5"></div>
+      </div>
+    </ng-container>
+    <ng-template #barChart>
+      <div *ngIf="chartOptions" echarts [options]="chartOptions" class="echart"></div>
+    </ng-template>
+  </div>
+
+  <!-- Pie Chart Skeleton or Actual -->
+  <div class="chart-container">
+    <ng-container *ngIf="!pieChartOptions; else pieChart">
+      <div class="pie-skeleton"></div>
+    </ng-container>
+    <ng-template #pieChart>
+      <div echarts [options]="pieChartOptions" class="echart"></div>
+    </ng-template>
+  </div>
+
+  <div class="payroll_manager">
+    <h2 class="title">Monthly Pay Slip Bills</h2>
+    <hr class="section-divider">
+  
+    <div class="month-grid" *ngIf="(payrollData | keyvalue)?.length > 0; else noPayslips">
+      <div *ngFor="let month of payrollData | keyvalue" class="month-box">
+        <div class="month-row">
+          <span class="month-name">{{ month.key }}</span>
+          <div class="button-group">
+            <button class="view-btn" (click)="viewPayslip($any(month).key)">View</button>
+            <button class="download-btn" (click)="downloadPayslip($any(month).key)">Download</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <ng-template #noPayslips>
+      <div class="no-payslips-message">
+        <p>No payslips available for your account.</p>
+        <p *ngIf="(payrollData | keyvalue)?.length === 0">Please contact HR if you believe this is an error.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

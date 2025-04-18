@@ -49,7 +49,6 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required]
     });
 
-    // 🔁 Auto-login from localStorage
     const savedUser = localStorage.getItem(this.localKey);
     if (savedUser) {
       try {
@@ -86,28 +85,32 @@ export class LoginComponent implements OnInit {
       }
 
       const db = getDatabase();
-      const dbRef = ref(db, 'employees');
-      const snapshot = await get(child(dbRef, '/'));
+      const snapshot = await get(child(ref(db), 'employees'));
 
       if (snapshot.exists()) {
         const employees = snapshot.val();
-        const employeeList: Employee[] = Object.values(employees) as Employee[];
-        const employee = employeeList.find(emp => emp.personal_mail === user.email);
+        const userEmail = user.email.toLowerCase();
 
-        if (employee) {
-          console.log('✅ Verified Employee via personal_mail:', employee);
-          localStorage.setItem(this.localKey, JSON.stringify(employee));
+        let matchedEmployee: Employee | null = null;
+        Object.keys(employees).forEach((key) => {
+          const emp = employees[key];
+          if (emp.personal_mail?.toLowerCase() === userEmail) {
+            matchedEmployee = emp;
+          }
+        });
 
-          await this.delayedRedirect(employee);
+        if (matchedEmployee) {
+          console.log('✅ Verified Employee via personal_mail:', matchedEmployee);
+          localStorage.setItem(this.localKey, JSON.stringify(matchedEmployee));
+          await this.delayedRedirect(matchedEmployee);
         } else {
           console.log('❌ Unauthorized user, signing out...');
           this.errorMessage = 'Unauthorized user. Access denied.';
           await this.auth.signOut();
-
           try {
-            await user.delete(); // Optional: clean up
-          } catch (deleteError) {
-            console.warn('⚠️ Could not auto-delete unauthorized account:', deleteError);
+            await user.delete(); // optional cleanup
+          } catch (err) {
+            console.warn('⚠️ Could not auto-delete unauthorized account:', err);
           }
         }
       } else {
@@ -115,7 +118,6 @@ export class LoginComponent implements OnInit {
       }
     } catch (error: any) {
       console.error('❌ Google Login Error:', error);
-
       if (error.code === 'auth/popup-blocked') {
         this.errorMessage = 'Popup was blocked. Please allow popups in your browser.';
       } else {
@@ -162,19 +164,24 @@ export class LoginComponent implements OnInit {
 
     try {
       const db = getDatabase();
-      const dbRef = ref(db, 'employees');
-      const snapshot = await get(child(dbRef, '/'));
+      const snapshot = await get(child(ref(db), 'employees'));
 
       if (snapshot.exists()) {
         const employees = snapshot.val();
-        const employeeList: Employee[] = Object.values(employees) as Employee[];
-        const employee = employeeList.find(emp => emp.email === user.email);
+        const userEmail = user.email.toLowerCase();
 
-        if (employee && employee.department) {
-          console.log('✅ Employee Found:', employee);
-          localStorage.setItem(this.localKey, JSON.stringify(employee));
+        let matchedEmployee: Employee | null = null;
+        Object.keys(employees).forEach((key) => {
+          const emp = employees[key];
+          if (emp.email?.toLowerCase() === userEmail) {
+            matchedEmployee = emp;
+          }
+        });
 
-          await this.delayedRedirect(employee);
+        if (matchedEmployee) {
+          console.log('✅ Employee Found:', matchedEmployee);
+          localStorage.setItem(this.localKey, JSON.stringify(matchedEmployee));
+          await this.delayedRedirect(matchedEmployee);
         } else {
           this.errorMessage = 'No associated employee record found.';
         }
@@ -187,9 +194,8 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  // 🔁 Introduced delay to prevent guard issues
   private async delayedRedirect(employee: Employee): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 1000)); // 200ms delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     const dept = employee.department?.toUpperCase();
 

@@ -55,6 +55,7 @@ import { ApplicantComponent } from './components/applicant-tracker/applicant/app
 import { ManagersidebarComponent } from './components/shared/managersidebar/managersidebar.component';
 import { EmployeeReportComponent } from './components/employee-report/employee-report.component';
 import { WorkdayUploaderComponent } from './components/workday-uploader/workday-uploader.component';
+import { ChartGroupTwoComponent } from './components/chart-group-two/chart-group-two.component';
 
 
 @NgModule({
@@ -88,7 +89,8 @@ import { WorkdayUploaderComponent } from './components/workday-uploader/workday-
     ManagersidebarComponent,
     EmployeeReportComponent,
     WorkdayUploaderComponent,
-    PayslipViewerComponent
+    PayslipViewerComponent,
+    ChartGroupTwoComponent
   ],
   imports: [
     BrowserModule,
