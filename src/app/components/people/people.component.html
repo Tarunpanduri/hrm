@@ -1,0 +1,74 @@
+<!-- Dashboard Container -->
+<div class="dashboard-container">
+
+  <!-- Top container with department cards and chart -->
+  <div class="top-container">
+
+    <!-- Scrollable Department Cards -->
+    <div class="departments-container">
+      <div #departmentsWrapper class="departments">
+        <!-- Skeleton loading -->
+        <ng-container *ngIf="!departments?.length; else departmentList">
+          <div class="card skeleton-card" *ngFor="let i of [1, 2, 3, 4]"></div>
+        </ng-container>
+
+        <ng-template #departmentList>
+          <div 
+            *ngFor="let department of departments"
+            class="card"
+            [ngClass]="getDepartmentClass(department.name)"
+            (click)="selectDepartment(department.name)" 
+            [class.selected]="selectedDepartment === department.name"
+          >
+            <img [src]="department.img" [alt]="department.name" class="department-icon" />
+            <p>{{ department.name }}</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- ECharts Donut Chart -->
+    <div class="chart-container">
+      <ng-container *ngIf="!chartOptions">
+        <div class="skeleton-chart" style="margin-top: -20px;"></div>
+      </ng-container>
+      <div *ngIf="chartOptions" echarts [options]="chartOptions" class="chart" style="width: 300px; height: 195px; margin-top: -50px;"></div>
+    </div>
+
+  </div>
+
+  <!-- Employee Section -->
+  <div class="employee-card">
+    <div class="employee-scroll-wrapper">
+      <!-- Skeleton loading -->
+      <ng-container *ngIf="!filteredEmployees?.length; else employeeList">
+        <div class="employee-row skeleton-employee" *ngFor="let i of [1,2,3,4]">
+          <div class="skeleton-avatar"></div>
+          <div class="skeleton-info">
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line long"></div>
+          </div>
+          <div class="skeleton-location"></div>
+          <div class="skeleton-department"></div>
+        </div>
+      </ng-container>
+
+      <ng-template #employeeList>
+        <div class="employee-row" *ngFor="let employee of filteredEmployees">
+          <img [src]="employee.profileImg || 'assets/default-avatar.png'" alt="{{ employee.name }}">
+          <div class="employee-info">
+            <p class="name">{{ employee.name }}</p>
+            <p class="role">{{ employee.role }}</p>
+          </div>
+          <div class="location">
+            <p>{{ employee.location || 'Unknown' }}</p>
+          </div>
+          <span class="department-label" [ngClass]="getDepartmentClass(employee.department)">
+            {{ employee.department || 'No Department' }}
+          </span>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+</div>

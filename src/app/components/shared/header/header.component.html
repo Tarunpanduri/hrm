@@ -1,0 +1,23 @@
+<header class="headerr">
+  <div class="header">
+    <input type="text" class="search-bar" placeholder="Search">
+    <div class="profile-section">
+      <span style="font-weight: bold;">{{ employeeName }}</span>
+      <img [src]="profileImg" alt="Profile" class="profile-img">
+    </div>
+  </div>
+        <div class="dashboard-welcome">
+            <h1>{{ greeting }}, {{ employeeName }}</h1>
+
+            <div class="datetime-section">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <h3>{{ currentDateTime }}</h3>
+            </div>
+      </div>
+  </header>
+
+
+

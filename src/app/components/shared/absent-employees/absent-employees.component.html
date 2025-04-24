@@ -1,0 +1,39 @@
+<div class="container" [ngStyle]="{ width: cardwidth }">
+  <h3>Absent Employees</h3> 
+  <div class="scroll-container">
+    
+    <!-- Show skeletons while loading -->
+    <ng-container *ngIf="isLoading; else employeeList">
+      <div class="employee-card" *ngFor="let sk of [1,2,3,4]">
+        <div class="skeleton-img"></div>
+        <div class="info">
+          <div class="skeleton-text name"></div>
+          <div class="skeleton-text id"></div>
+          <div class="skeleton-text dept"></div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Actual employee cards or empty message -->
+    <ng-template #employeeList>
+      <ng-container *ngIf="absentEmployees.length > 0; else noEmployees">
+        <div class="employee-card" *ngFor="let emp of absentEmployees">
+          <img [src]="emp.profileImg" alt="{{ emp.name }}" />
+          <div class="info">
+            <h4>{{ emp.name }}</h4>
+            <span><div style="font-weight: 600; margin-right: 5px;">ID:</div> {{ emp.emp_id }}</span>
+            <span><div style="font-weight: 600; margin-right: 5px;">Dept:</div> {{ emp.department }}</span>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- No employees present -->
+      <ng-template #noEmployees>
+        <div class="no-employees-container">
+          <img src="/employee-icon-19-Photoroom.png" alt="All Present" />
+          <p>All employees are present today</p>
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+
+
+  <div class="chartssssssssss">
+    <!-- Attendance Performance Line Chart -->
+    <div class="chart-container">
+        <!-- Show Skeleton while loading -->
+        <div *ngIf="isLoading" class="line-chart-loader">
+          <div class="y-axis"></div>
+          <div class="x-axis"></div>
+          <svg class="animated-line" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M 0 80 Q 25 60 50 70 T 100 40" />
+          </svg>
+        </div>
+      
+        <!-- Actual chart when loaded -->
+        <div *ngIf="!isLoading" echarts [options]="attendanceChartOption" class="echart"></div>
+      </div>
+      
+      
+
+    <!-- 🟨 Department Pie Chart -->
+    <div class="chart-container">
+        <div *ngIf="isLoading" class="pie-skeleton"></div>
+        <div *ngIf="!isLoading" echarts [options]="departmentChartOption" class="echart"></div>
+        </div>
+  </div>
+  

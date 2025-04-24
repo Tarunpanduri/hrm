@@ -1,0 +1,73 @@
+<style>
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .skeleton {
+    height: 1rem;
+    border-radius: 0.25rem;
+    background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s infinite;
+  }
+</style>
+
+<div class="tableee" style="border: 0.125rem solid #ced4da; border-radius: 0.75rem; padding: 1.25rem; height: 55vh; overflow: hidden; display: flex; flex-direction: column; margin-top: 2vh; background-color: #fdfefe; ">
+  <h3 style="margin-bottom: 1rem; color: #000000; font-weight: 600;">Attendance Log</h3>
+
+  <div style="flex: 1; overflow-y: auto; border: 0.1rem solid #ced4da; border-radius: 0.625rem; background-color: #ffffff;">
+    <table style="width: 100%; border-collapse: collapse; text-align: left; font-family: 'Segoe UI', sans-serif; font-size: 1rem;">
+      <thead style="position: sticky; top: 0; background-color: #505050; color: #ffffff; z-index: 1;">
+        <tr>
+          <th style="padding: 0.75rem 1rem; min-width: 12vw;">Date</th>
+          <th style="padding: 0.75rem 1rem; min-width: 10vw;">Check-in</th>
+          <th style="padding: 0.75rem 1rem; min-width: 10vw;">Check-out</th>
+          <th style="padding: 0.75rem 1rem; min-width: 10vw;">Duration</th>
+          <th style="padding: 0.75rem 1rem; min-width: 10vw;">Status</th>
+        </tr>
+      </thead>
+
+      <!-- Skeleton Loading State -->
+      <tbody *ngIf="isLoading; else tableContent">
+        <tr *ngFor="let i of [1,2,3,4,5,6,7,8]">
+          <td style="padding: 0.75rem 1rem;"><div class="skeleton"></div></td>
+          <td style="padding: 0.75rem 1rem;"><div class="skeleton"></div></td>
+          <td style="padding: 0.75rem 1rem;"><div class="skeleton"></div></td>
+          <td style="padding: 0.75rem 1rem;"><div class="skeleton"></div></td>
+          <td style="padding: 0.75rem 1rem;"><div class="skeleton"></div></td>
+        </tr>
+      </tbody>
+
+      <!-- Actual Data or No Data -->
+      <ng-template #tableContent>
+        <tbody *ngIf="attendanceData.length > 0; else noData">
+          <tr *ngFor="let entry of attendanceData" style="border-bottom: 0.063rem solid #e0e0e0;">
+            <td style="padding: 0.75rem 1rem;">{{ entry.dateStr }}</td>
+            <td style="padding: 0.75rem 1rem;">{{ entry.checkin }}</td>
+            <td style="padding: 0.75rem 1rem;">{{ entry.checkout }}</td>
+            <td style="padding: 0.75rem 1rem;">{{ entry.duration }}</td>
+            <td style="padding: 0.75rem 1rem; font-weight: 500;">
+              <span style="font-weight: 600;" [ngStyle]="{
+                'color': entry.status === 'Present' ? '#198754' : entry.status === 'Pending' ? '#ffc107' : '#dc3545'
+              }">
+                {{ entry.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </ng-template>
+    </table>
+
+    <!-- No Check-ins Message -->
+    <ng-template #noData>
+      <div style="display: flex; justify-content: center; align-items: center; height: 100%; padding: 5vh 0;">
+        <p style="font-style: italic; color: #6c757d; font-size: 1rem; margin-left: 25vw; margin-top: 10vh;">No check-ins yet</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

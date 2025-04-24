@@ -1,0 +1,40 @@
+
+  <div class="carddd" [ngStyle]="{ height: cardHeight }" [ngStyle]="{ width: cardwidth }">
+    <h2 style="color: black;">Leave Requests</h2>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Employee ID</th>
+      <th>Leave Type</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>Reason</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody  [ngStyle]="{ height: tbodyHeight }">
+    <tr *ngIf="leaveRequests.length === 0">
+      <td colspan="7" class="no-leave-row">No leave requests yet.</td>
+    </tr>
+    <tr *ngFor="let leave of leaveRequests">
+      <td>{{ leave.empId }}</td>
+      <td>{{ leave.type }}</td>
+      <td>{{ leave.startDate }}</td>
+      <td>{{ leave.endDate }}</td>
+      <td>{{ leave.reason }}</td>
+      <td>{{ leave.status }}</td>
+      <td>
+        <button *ngIf="leave.status === 'Pending'" class="approve-btn" (click)="updateLeaveStatus(leave.empId, leave.id, 'Approved')">
+           Approve
+        </button>
+        <button *ngIf="leave.status === 'Pending'" class="reject-btn" (click)="updateLeaveStatus(leave.empId, leave.id, 'Rejected')">
+           Reject
+        </button>        
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+</div>

@@ -1,0 +1,39 @@
+.mainthree {
+
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
+  }
+  
+  .mainthree::-webkit-scrollbar {
+    display: none; 
+  }
+
+
+  .stats {
+    display: flex;
+    flex-direction: row !important;
+    justify-content: space-around;
+    margin-top: 20px;
+    background: #f1f1f1;
+    padding: 20px;
+    border-radius: 1px;
+    width: 100%;
+  }
+
+  
+  .seco {
+
+    background-color: #ffffff;
+    border: 2px solid #ced4da;
+    border-radius: 5px; /* Rounds the corners */
+    display: flex;
+    flex-direction: row;
+    max-height: 10rem;
+}
+
+
+.lr{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}

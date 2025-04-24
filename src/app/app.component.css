@@ -1,0 +1,11 @@
+/* Hide the app content on small screens */
+@media (max-width: 991px) {
+    app-root {
+      display: none; /* Hides the whole app */
+    }
+  
+    .mobile-warning {
+      display: block; /* Shows the warning page */
+    }
+  }
+  

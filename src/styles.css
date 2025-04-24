@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+/* Apply Montserrat globally */
+:root {
+    --font-family: 'Montserrat', sans-serif;
+}
+
+/* Use it for all elements */
+* {
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Ensure headings use Montserrat with proper font weight */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700; /* Adjust as needed */
+}
+
+
+

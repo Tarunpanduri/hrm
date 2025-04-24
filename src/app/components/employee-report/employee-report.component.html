@@ -1,0 +1,39 @@
+<div class="report-container">
+  <h2>Employee Complete Report</h2>
+
+  <div class="report-grid">
+    <!-- Left Section: Search Panel -->
+    <div class="search-panel">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Enter Employee ID</mat-label>
+        <input matInput [(ngModel)]="empId" (keyup.enter)="searchEmployee()" />
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="searchEmployee()">Search & Preview Report</button>
+    </div>
+
+    <!-- Right Section: Preview -->
+    <div *ngIf="dataLoaded" class="preview-panel">
+      <h3 class="emp-name"> {{ employee.name }} ({{ employee.emp_id }})</h3>
+      <div class="details-row">
+        <p> {{ employee.role }} <strong> : Role</strong>|  {{ employee.department }} <strong>: Department</strong></p>
+      </div>
+      <div class="details-row">
+        <p> {{ employee.email }} <strong>: Email</strong> |  {{ employee.location }} <strong>: Location</strong></p>
+      </div>
+      <div class="details-row">
+        <p> {{ totalPresentDays }}/{{ totalWorkingDays }} days <strong>: Attendance</strong> |{{ avgWorkHours }} hrs/day  <strong>: Avg. Hours</strong> </p>
+      </div>
+      <div class="details-row">
+        <p> {{ taskCompletionRate }}% <strong>: Task Completion</strong></p>
+      </div>
+
+      <div class="button-container">
+        <button mat-raised-button color="accent" (click)="generatePDF()">Generate PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden Chart for PDF -->
+<div id="chartContainer" #chartContainer style="width: 50%; height: 400px; position: absolute; left: -9999px;"></div>

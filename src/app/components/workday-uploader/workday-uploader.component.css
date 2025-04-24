@@ -1,0 +1,38 @@
+/* src/app/workday-uploader/workday-uploader.component.css */
+.uploader-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  h2 {
+    text-align: center;
+    color: #333;
+  }
+  
+  input, button {
+    display: block;
+    width: 100%;
+    margin: 0.6rem 0;
+    padding: 0.6rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  button {
+    background-color: #1976d2;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  button:hover {
+    background-color: #1565c0;
+  }
+  

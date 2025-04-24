@@ -1,0 +1,26 @@
+<div class="chartssssssssss">
+  <!-- Pie Chart Skeleton or Actual -->
+  <div class="chart-container">
+    <ng-container *ngIf="!pieChartOptions; else pieChart">
+      <div class="pie-skeleton"></div>
+    </ng-container>
+    <ng-template #pieChart>
+      <div echarts [options]="pieChartOptions" class="echart"></div>
+    </ng-template>
+  </div>
+  <!-- Bar Chart Skeleton or Actual -->
+  <div class="chart-container">
+    <ng-container *ngIf="!barChartOptions; else barChart">
+      <div class="bar-skeleton">
+        <div class="bar-skeleton-bar bar1"></div>
+        <div class="bar-skeleton-bar bar2"></div>
+        <div class="bar-skeleton-bar bar3"></div>
+        <div class="bar-skeleton-bar bar4"></div>
+        <div class="bar-skeleton-bar bar5"></div>
+      </div>
+    </ng-container>
+    <ng-template #barChart>
+      <div echarts [options]="barChartOptions" class="echart"></div>
+    </ng-template>
+  </div>
+</div>

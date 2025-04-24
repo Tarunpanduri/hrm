@@ -1,0 +1,31 @@
+ <!-- [ngStyle]="{ width: cardwidth }" -->
+    <div class="content">
+      <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin: 10px;">
+        <!-- Left Section -->
+    <div class="section-left" style="margin-left: 20px;">
+      <button class="checkin-btn" (click)="checkIn()" [disabled]="checkinTime">clock in</button>
+      <p class=" gg">Clock in: {{ checkinTime || '--:-- --' }}</p>
+
+      <button class="checkout-btn" (click)="checkOut()" [disabled]="!checkinTime || checkoutTime">clock out</button>
+      <p class=" gg">Clock out: {{ checkoutTime || '--:-- --' }}</p>
+    </div>
+
+    <!-- Right Section (Updated) -->
+    <div class="section-right">
+      <!-- Top Section: Today's Average Time -->
+      <div class="info-box">
+        <i class="fas fa-clock"></i> <!-- Small Icon -->
+        <p class="info-title">Average today time:</p>
+        <p class="info-value">{{ todayWorkedHours || '0' }}</p>
+      </div>
+
+      <!-- Bottom Section: Weekly Report -->
+      <div class="info-box">
+        <i class="fas fa-chart-line"></i> <!-- Small Icon -->
+        <p class="info-title">Weekly report:</p>
+        <h2>{{ weeklyWorkedHours }}hrs/{{ fixedWeeklyHours }}hrs</h2>
+      </div>
+    </div>
+      </div>
+    
+  </div>
