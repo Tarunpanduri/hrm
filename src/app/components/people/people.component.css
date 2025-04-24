@@ -1,0 +1,429 @@
+@media (max-width: 1280px) {  
+  .dashboard-container {
+    max-width: 1035px !important;
+    padding: 15px !important;
+    margin-top: -13px !important;
+  }
+  .top-container {
+    height: 180px !important;
+  }
+  /* Department cards */
+.card {
+  width: 250px;
+  height: 148px !important;
+}
+.employee-card {
+height: 285px !important;
+}
+.skeleton-chart {
+border-radius: 0px !important;
+  height: 165px !important;
+}
+}
+
+.dashboard-container {
+  padding: 20px;
+  width: 1320px;
+  height: 70vh;
+  margin-top: -20px;
+}
+
+/* Top container for department cards and chart */
+.top-container {
+  display: flex;
+  flex-direction: row;
+  border: 2px solid #ced4da;
+  height: 218px;
+  padding: 10px;
+  border-radius: 10px;
+
+}
+
+/* Scrollable department container */
+.departments-container {
+  overflow: hidden; /* Hide the scrollbar */
+  width: 80%;
+  position: relative;
+}
+
+/* Department cards inside the scrollable container */
+.departments {
+  display: flex;
+  gap: 10px;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+  overflow-x: auto; /* Allow horizontal scrolling */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+.departments::-webkit-scrollbar {
+  display: none;
+}
+.department-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 8px;
+  margin-right: 10px;
+}
+
+
+
+/* Department cards */
+.card {
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+  font-size: 16px;
+  font-weight: bold;
+  width: 250px;
+  height: 168px;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.card.it {
+  background-color: #e3e7ff; /* Light Blue */
+  color: #3a4f8a;
+  border: 1px solid #3a4f8a;
+}
+
+.card.finance {
+  background-color: #eaf4ff; /* Light Cyan */
+  color: #2f6b9a;
+  border: 1px solid #2f6b9a;
+}
+
+.card.management {
+  background-color: #f3e8ff; /* Light Purple */
+  color: #6d3baa;
+  border: 1px solid #6d3baa;
+}
+
+.card.hr {
+  background-color: #fce4ec; /* Light Pink */
+  color: #ad1457;
+  border: 1px solid #ad1457;
+}
+
+.card.design {
+  background-color: #d4e6f1; /* Light Blue */
+  color: #1a5276;
+  border: 1px solid #1a5276;
+}
+
+.card.marketing {
+  background-color: #f9ebea; /* Light Red */
+  color: #922b21;
+  border: 1px solid #922b21;
+}
+
+
+/* Chart container */
+.chart-container {
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+/* Hide scrollbars completely */
+.departments-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Employee card (single container for all employees) */
+/* Scrollable wrapper inside employee card */
+.employee-scroll-wrapper {
+  max-height: 400px; /* Set your desired height */
+  overflow-y: auto;
+  padding-right: 10px; /* Prevent content clipping behind scrollbar */
+}
+
+/* Hide scrollbar for Chrome, Safari and Edge */
+.employee-scroll-wrapper::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Hide scrollbar for Firefox */
+.employee-scroll-wrapper {
+  scrollbar-width: none;
+}
+
+/* Optional: maintain left-right padding of employee-card */
+.employee-card {
+  background-color: #ffffff;
+  border-radius: 0px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transform: translateY(-100px);
+  margin-top: 90px;
+  border: 2px solid #ced4da;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  max-height: 375px; /* Optional */
+}
+
+
+/* Employee row */
+.employee-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Remove border for last employee */
+.employee-row:last-child {
+  border-bottom: none;
+}
+
+/* Employee profile image */
+.employee-row img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: contain;
+}
+
+/* Employee info */
+.employee-info {
+  flex: 2;
+  text-align: left;
+  margin-left: 15px;
+}
+
+/* Employee name */
+.name {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Employee role */
+.role {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+/* Employee location and time */
+.location {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  min-width: 150px;
+  margin-right: 300px;
+}
+
+.time {
+  font-size: 12px;
+  color: #999;
+}
+
+/* General Department Label */
+.department-label {
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  display: inline-block;
+  flex: 0.5;
+}
+
+/* Department-specific styles */
+.department-label.it {
+  background-color: #e3e7ff; /* Light Blue */
+  color: #3a4f8a;
+  border: 1px solid #3a4f8a;
+}
+
+.department-label.finance {
+  background-color: #eaf4ff; /* Light Cyan */
+  color: #2f6b9a;
+  border: 1px solid #2f6b9a;
+}
+
+.department-label.management {
+  background-color: #f3e8ff; /* Light Purple */
+  color: #6d3baa;
+  border: 1px solid #6d3baa;
+}
+
+.department-label.hr {
+  background-color: #fce4ec; /* Light Pink */
+  color: #ad1457;
+  border: 1px solid #ad1457;
+}
+
+.department-label.design {
+  background-color: #d4e6f1; /* Light Blue */
+  color: #1a5276;
+  border: 1px solid #1a5276;
+}
+
+.department-label.marketing {
+  background-color: #f9ebea; /* Light Red */
+  color: #922b21;
+  border: 1px solid #922b21;
+}
+
+.card.it{
+  background-color: #e3e7ff; /* Light Blue */
+  color: #3a4f8a;
+  border: 1px solid #3a4f8a;
+}
+
+
+.card.finance {
+  background-color: #eaf4ff; /* Light Cyan */
+  color: #2f6b9a;
+  border: 1px solid #2f6b9a;
+}
+
+.card.management {
+  background-color: #f3e8ff; /* Light Purple */
+  color: #6d3baa;
+  border: 1px solid #6d3baa;
+}
+
+.card.hr {
+  background-color: #fce4ec; /* Light Pink */
+  color: #ad1457;
+  border: 1px solid #ad1457;
+}
+
+.card.designers {
+  background-color: #d4e6f1; /* Light Blue */
+  color: #1a5276;
+  border: 1px solid #1a5276;
+}
+
+.card.marketing {
+  background-color: #f9ebea; /* Light Red */
+  color: #922b21;
+  border: 1px solid #922b21;
+}
+
+.card.designer {
+  background-color: #fbefdb; /* Moccasin (Soft Orange) */
+  color: #8b4513; /* Saddle Brown */
+  border: 1px solid #8b4513;
+}
+
+
+
+/* Skeleton styles */
+.skeleton-card {
+  background-color: #e0e0e0;
+  width: 250px;
+  height: 168px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-chart {
+  width: 300px;
+  height: 195px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Skeleton for employee list */
+.skeleton-employee {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.skeleton-avatar {
+  width: 70px;
+  height: 70px;
+  background-color: #ccc;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-info {
+  flex: 2;
+  margin-left: 15px;
+}
+
+.skeleton-line {
+  height: 14px;
+  background-color: #ccc;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+.skeleton-line.long {
+  width: 80%;
+}
+
+.skeleton-location {
+  flex: 1;
+  height: 14px;
+  background-color: #ccc;
+  border-radius: 4px;
+  margin-right: 300px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-department {
+  width: 100px;
+  height: 28px;
+  background-color: #ccc;
+  border-radius: 5px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Skeleton animation */
+@keyframes pulse {
+  0% {
+    background-color: #e0e0e0;
+  }
+  50% {
+    background-color: #f5f5f5;
+  }
+  100% {
+    background-color: #e0e0e0;
+  }
+}
+
+
+
+@media (min-width: 768px) {
+  .dashboard-container {
+    padding: 20px;
+    width: 1075px !important;
+    height: 70vh;
+    margin-top: -20px;
+  }
+  
+}

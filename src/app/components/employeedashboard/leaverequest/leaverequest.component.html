@@ -1,0 +1,92 @@
+<div class="container "  [ngStyle]="{ height: cardheight }"   [ngStyle]="{ width: cardwidth }" >
+
+  
+
+  <!-- Leave Application Form -->
+  <div class="section">
+    <h2 class="section-title" style="font-weight: bold;">Apply for Leave</h2>
+    <div>
+      <form (submit)="submitLeaveRequest()" class="form-wrapper shadow-sm"  style="border: 2px solid #bbbbbb;">
+        <div class="form-wrapper" style="display: flex; gap: 30px; flex-wrap: wrap;">
+          <!-- Form Section -->
+          <div style="flex: 1 1 45%;">
+            <div class="mb-3" style="margin-bottom: 10px;">
+              <label class="form-label" >Leave Type</label>
+              <select [(ngModel)]="leaveRequest.type" name="leaveType" required class="form-select">
+                <option value="Sick Leave">Sick Leave</option>
+                <option value="Casual Leave">Casual Leave</option>
+                <option value="Annual Leave">Earned Leave</option>
+              </select>
+            </div>
+        
+            <div class="mb-3" style="margin-bottom: 10px;">
+              <label class="form-label">Start Date</label>
+              <input type="date" [(ngModel)]="leaveRequest.startDate" name="startDate" required class="form-control" />
+            </div>
+        
+            <div class="mb-3" style="margin-bottom: 10px;">
+              <label class="form-label">End Date</label>
+              <input type="date" [(ngModel)]="leaveRequest.endDate" name="endDate" required class="form-control" />
+            </div>
+        
+            <div class="mb-3" style="margin-bottom: 10px;">
+              <label class="form-label">Reason</label>
+              <textarea rows="3" [(ngModel)]="leaveRequest.reason" name="reason" required class="form-control"></textarea>
+            </div>
+          </div>
+        
+          <!-- Leave Balance Chart -->
+          <div class="skeliton">
+            <div style="flex: 1 1 45%;">
+              <ng-container *ngIf="!leaveChartOptions; else leaveChart">
+                <div class="pie-skeleton"></div>
+              </ng-container>
+              <ng-template #leaveChart>
+                <div 
+                  echarts 
+                  [options]="leaveChartOptions" 
+                  class="leave-chart echart-container"
+                  [autoResize]="true">
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>        
+        <button type="submit" class="btn-primary w-100">Submit Leave</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Leave Requests List with Filters -->
+  <div class="section">
+    <h4 class="section-title">Your Leave Requests</h4>
+    <div class="filters">
+      <input type="text" [(ngModel)]="searchQuery" placeholder="Search by type or status" class="form-control filter-input" />
+      <select [(ngModel)]="sortBy" class="form-select filter-dropdown">
+        <option value="date">Sort by Date</option>
+        <option value="status">Sort by Status</option>
+      </select>
+    </div>
+
+    <div class="leave-list-container" [ngStyle]="{ height: cardhehight }" >
+      <ng-container *ngIf="filteredLeaves().length > 0; else noLeaves">
+        <ul class="leave-list">
+          <li class="list-group-item" *ngFor="let leave of filteredLeaves()">
+            <strong>{{ leave.type }}</strong> – {{ leave.status }} <br />
+            <small class="text-muted">{{ leave.startDate }} to {{ leave.endDate }}</small>
+          </li>
+        </ul>
+      </ng-container>
+    
+      <ng-template #noLeaves>
+        <div class="no-leaves-message">
+          You haven't applied for any leaves.
+        </div>
+      </ng-template>
+    </div>
+    
+    
+  </div>
+
+
+</div>

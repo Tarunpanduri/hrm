@@ -1,0 +1,58 @@
+<div class="login-container">
+  <!-- Left Panel -->
+  <div class="left-panel">
+    <h2 style="margin-top: -210px;">CLIM IT SOLUTIONS HRM</h2>
+    <h3 style="margin-top: 250px; margin-bottom: 10px;">Your Smart Workforce Partner</h3>
+    <ul>
+      <li>End-to-end encrypted HR data</li>
+      <li>Access only with verified credentials</li>
+      <li>Automated employee activity logs</li>
+    </ul>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="right-panel">
+    <h2>Sign in</h2>
+    <p>Sign in using your account with</p>
+
+    <!-- Social Login -->
+    <div style="margin-top: -10px;" class="social-buttons">
+      <button class="social-button" (click)="signInWithGoogle()">
+        <i class="fab fa-google"></i> oogle
+      </button>
+    </div>
+
+    <p style="margin-top: 5px;">Or log in with your email address</p>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+      <div class="input-group">
+        <input type="email" formControlName="email" placeholder="Email address">
+
+        <div class="password-wrapper">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Password">
+          <span class="toggle-password" (click)="togglePasswordVisibility()">
+            <i class="{{ showPassword ? 'fas fa-eye-slash' : 'fas fa-eye' }}"></i>
+          </span>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        class="sign-in-button"
+        type="submit"
+        [disabled]="loginForm.invalid"
+        [ngClass]="{'active-button': loginForm.valid}">
+        Sign in
+      </button>
+    </form>
+  </div>
+</div>

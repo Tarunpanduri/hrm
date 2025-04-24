@@ -1,0 +1,41 @@
+<aside class="sidebar">
+  <div class="logo">
+    <a routerLink="/employee/dashboard" class="logo">
+      <img src="https://i.ibb.co/TxyZgTvw/CLIM-IT-SOLUTIONS-final-2.png" alt="Logo" class="logo-img" />
+    </a>    
+  </div>
+  
+  
+  
+  <ul class="nav-links">
+    <li><a routerLink="/admin-dashboard/dashboard" routerLinkActive="active">Dashboard</a></li>
+    <li><a routerLink="/admin-dashboard/Applicant" routerLinkActive="active">Applicant Tracker</a></li>
+    <li><a routerLink="/admin-dashboard/People" routerLinkActive="active">People</a></li>
+    <li><a routerLink="/admin-dashboard/calender" routerLinkActive="active">Who's Away</a></li>
+  </ul>
+  <button class="logout" (click)="logout()">Log out</button>
+</aside>
+
+
+<style>
+  .logo {
+    
+    align-items: center;
+   
+    border-radius: 12px;
+    width: fit-content;
+  }
+
+  .logo-img {
+    margin-left: -20px;
+    margin-top: -20px;
+    max-height: 380px;
+    height: 100%;
+    max-width: 380px;
+    width: 100%;
+   
+
+  }
+
+
+</style>

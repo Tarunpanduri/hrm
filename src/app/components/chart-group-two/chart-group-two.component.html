@@ -1,0 +1,55 @@
+<div class="chartssssssssss">
+  <!-- 1. Monthly Expenses Chart -->
+  <div class="chart-container">
+    <ng-container *ngIf="!chartOptions; else barChart">
+      <div class="bar-skeleton">
+        <div class="bar-skeleton-bar bar1"></div>
+        <div class="bar-skeleton-bar bar2"></div>
+        <div class="bar-skeleton-bar bar3"></div>
+        <div class="bar-skeleton-bar bar4"></div>
+        <div class="bar-skeleton-bar bar5"></div>
+      </div>
+    </ng-container>
+    <ng-template #barChart>
+      <div *ngIf="chartOptions" echarts [options]="chartOptions" class="echart"></div>
+    </ng-template>
+  </div>
+
+  <!-- 2. Department Attendance Chart -->
+  <div class="chart-container">
+    <ng-container *ngIf="!pieChartOptions; else pieChart">
+      <div class="pie-skeleton"></div>
+    </ng-container>
+    <ng-template #pieChart>
+      <div echarts [options]="pieChartOptions" class="echart"></div>
+    </ng-template>
+  </div>
+
+  <!-- 3. Payslip Management Section -->
+  <div class="payroll_manager">
+    <h2 class="title">Monthly Pay Slip Bills</h2>
+    <hr class="section-divider">
+  
+    <div class="scroll-wrapper" *ngIf="getObjectKeysLength(payrollData) > 0; else noPayslips">
+      <div class="month-grid">
+        <div *ngFor="let month of payrollData | keyvalue: originalOrder" class="month-box">
+          <div class="month-row">
+            <span class="month-name">{{ month.key }}</span>
+            <div class="button-group">
+              <button class="view-btn" (click)="viewPayslip(month.key)">View</button>
+              <button class="download-btn" (click)="downloadPayslip(month.key)">Download</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <ng-template #noPayslips>
+      <div class="no-payslips-message">
+        <p>No payslips available for your account.</p>
+        <p *ngIf="getObjectKeysLength(payrollData) === 0">Please contact HR if you believe this is an error.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

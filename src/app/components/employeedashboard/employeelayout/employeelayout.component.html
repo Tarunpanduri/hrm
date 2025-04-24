@@ -1,0 +1,15 @@
+
+  <!-- layout.component.html -->
+
+<div class="main" style="display: flex; flex-direction: row;">
+    <app-employee-sidebar></app-employee-sidebar>
+  
+    <div class="maint" style="display: flex; flex-direction: column; height: 100vh; width: 100%;">
+      <app-header></app-header>
+  
+      <div class="mainthree" style="flex-grow: 1; overflow: auto; padding: 10px;">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+  

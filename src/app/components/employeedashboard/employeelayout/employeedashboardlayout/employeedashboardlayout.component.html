@@ -1,0 +1,20 @@
+        <!-- Stats Section -->
+        <section class="stats">
+            <app-checkin [cardwidth]="'28rem'"></app-checkin>
+
+           <app-employeecharts></app-employeecharts>
+
+         </section>
+
+        <!-- Leave Requests -->
+        <div style="margin-top: 15px; display: flex; flex-direction: row;" class="lr" >
+            <app-leaverequest [cardhehight]="'452px'"></app-leaverequest>
+            <div style="margin-top: -20px;">
+            <app-tasks [cardwidth]="'450px'"></app-tasks>
+            <app-payslip-viewer [cardheight]="'800px'" [cardwidth]="'557px'" [sectionwidth]="'457px'"></app-payslip-viewer>
+
+            </div>
+        </div>
+    
+        <!-- ATTENDENCE lOG -->
+        <app-attendance-summary></app-attendance-summary>

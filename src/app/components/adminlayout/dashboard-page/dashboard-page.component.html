@@ -1,0 +1,36 @@
+<!-- dashboard-page.component.html -->
+
+<!-- Stats Section -->
+<div class="gghh">
+  <section class="stats">
+
+    <app-checkin [cardwidth]="'31rem'"></app-checkin>
+
+    <app-attendance-chart ></app-attendance-chart>
+  </section>
+  
+  <div class="dashboard-content" style="display: flex;  flex-direction: row; ">
+    <app-leaverequest [cardheight]="'1122px'" [cardwidth]="'720px'" [cardhehight]="'490px'" ></app-leaverequest>
+  
+        <div class="section-container" >
+          <app-tasks [cardwidth]="'450px'"></app-tasks>
+          <app-present-employees [cardwidth]="'450px'"></app-present-employees>
+          <app-absent-employees [cardwidth]="'450px'"></app-absent-employees>
+        </div>
+  </div>
+
+
+
+
+  <div style="display: flex; flex-direction: row;">
+    <app-adminleaveapprove [cardHeight]="'530px'" [tbodyHeight]="'370px'" [cardwidth]="'47vw'"></app-adminleaveapprove>
+    <app-payslip-viewer [cardheight]="'530px'" [cardwidth]="'557px'" ></app-payslip-viewer>
+
+  </div>
+            <app-attendance-summary></app-attendance-summary>
+          <app-employee-report></app-employee-report>
+</div>
+
+
+
+  

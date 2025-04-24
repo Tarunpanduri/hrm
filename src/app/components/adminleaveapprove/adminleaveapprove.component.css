@@ -1,0 +1,155 @@
+@media (max-width: 1280px) {  
+  .carddd{
+    width: 40rem !important;
+    padding: 1vh 1vw !important;
+    margin: 1vh auto !important;
+    margin-right: 0.7vw !important;
+    max-height: 28rem !important;
+    margin-left: 0.7vw !important;
+  }
+  .carddd h2 {
+    margin-bottom: 0.5rem !important;
+    margin-top: 0.5rem !important;
+    font-size: 1.3rem !important;
+  }
+  table {
+    font-size: 0.7rem !important;
+    height: 67vh !important;
+
+  }
+
+  th, td {
+    padding: 0.5rem 0.8rem !important;
+  }
+
+  tbody {
+    max-height: 40vh !important;
+
+    border-bottom: 0.0625rem solid #CED4DA;
+  }
+
+  button {
+    padding: 0.3rem 0.6rem !important;
+    border-radius: 0.275rem !important;
+    margin: 0.1rem !important;
+    font-weight: 500 !important;
+    font-size: 0.7rem !important;
+    margin-left: -0.3rem !important;
+  }
+}
+
+.carddd {
+  background-color: #e0f7f7; /* light teal background */
+  border-radius: 0.625rem;
+  padding: 2vh 2vw;
+  margin: 2vh auto;
+  color: #004d4d; /* dark teal text */
+  border: 0.125rem solid #a0dcdc;
+  width: 70vw ;
+  max-width: 54rem; /* 860px equivalent */
+  overflow: hidden;
+  margin-right: 1vw;
+}
+
+.carddd h2 {
+  text-align: center;
+  color: #006666;
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #b2dfdf; 
+  border-radius: 0.5rem;
+  overflow: hidden;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+thead {
+  background-color: #009999; 
+  color: #ffffff;
+}
+
+th, td {
+  padding: 1rem 1.2rem;
+  text-align: left;
+}
+
+td {
+  border-bottom: 0.0625rem solid #80cfcf; 
+}
+
+.no-leave-row {
+  text-align: center;
+  font-style: italic;
+  color: #555;
+  font-weight: 500;
+}
+
+/* Scrollable tbody */
+tbody {
+  display: block;
+  overflow-y: auto;
+  max-height: 50vh;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  border-bottom: 0.0625rem solid #CED4DA;
+}
+tbody::-webkit-scrollbar {
+  display: none;
+}
+thead, tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* Buttons */
+button {
+  background: none;
+  border: 0.0625rem solid #007777;
+  color: #007777;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.375rem;
+  margin: 0.2rem;
+  transition: background 0.3s ease;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+button.approve-btn {
+  background-color: #009688;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  margin: 0.2rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  margin-left: -0.6rem;
+}
+
+button.approve-btn:hover {
+  background-color: #00796b;
+}
+
+button.reject-btn {
+  background-color: #ff5252;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  margin: 0.2rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  margin-left: -0.6rem;
+}
+
+button.reject-btn:hover {
+  background-color: #e53935;
+}

@@ -1,0 +1,122 @@
+<div class="task-container" [ngStyle]="{ width: cardwidth }">
+  <div class="task-header">
+    <h2>Tasks</h2>
+    <button *ngIf="canAddTask" (click)="openTaskForm()" class="add-button">+ Add Task</button>
+  </div>
+
+  <!-- Task Form Modal -->
+  <div *ngIf="showTaskForm" class="modal">
+    <form (ngSubmit)="addTask()" #taskFormRef="ngForm">
+      <h3>Create Task</h3>
+
+      <input
+        type="text"
+        placeholder="Task Title"
+        [(ngModel)]="taskForm.title"
+        name="title"
+        required />
+
+      <textarea
+        placeholder="Task Description"
+        [(ngModel)]="taskForm.description"
+        name="description"
+        required>
+      </textarea>
+
+      <label>Assign To:</label>
+
+      <!-- Selected Chips -->
+      <div class="chip-container">
+        <div class="chip" *ngFor="let emp of selectedEmployees">
+          {{ emp.name }}
+          <span class="remove-chip" (click)="removeSelected(emp)">×</span>
+        </div>
+      </div>
+
+      <!-- Search Input -->
+      <input
+        type="text"
+        placeholder="Search employees..."
+        [(ngModel)]="searchTerm"
+        name="search"
+        (ngModelChange)="onSearchChange()" />
+
+      <!-- Filtered Results -->
+      <ul class="autocomplete-list" *ngIf="filteredEmployees.length > 0 && searchTerm.length > 0">
+        <li
+          *ngFor="let emp of filteredEmployees"
+          (click)="selectEmployee(emp)">
+          {{ emp.name }} ({{ emp.department }})
+        </li>
+      </ul>
+
+      <input
+        type="date"
+        [(ngModel)]="taskForm.dueDate"
+        name="dueDate"
+        required />
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="taskFormRef.invalid">Create</button>
+        <button type="button" (click)="showTaskForm = false">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="filter-sort-controls">
+    <select [(ngModel)]="filterStatus" (change)="applyFilters()">
+      <option value="all">All Tasks</option>
+      <option value="completed">Completed</option>
+      <option value="pending">Pending</option>
+    </select>
+  
+    <select [(ngModel)]="sortOrder" (change)="applyFilters()">
+      <option value="asc">Sort by Due Date ↑</option>
+      <option value="desc">Sort by Due Date ↓</option>
+    </select>
+  </div>
+  <!-- Scrollable Task List -->
+  <div class="task-list-scrollable">
+    <div *ngIf="tasks.length === 0" class="no-tasks">
+      <img src="/Task.png" alt="No tasks" />
+      <p style="font-weight: 600;">No tasks yet.</p>
+    </div>
+
+    <!-- FIXED SECTION: Task Cards with separate *ngFor and *ngIf -->
+    <ng-container *ngFor="let task of filteredTasks">
+      <div *ngIf="!shouldHideTask(task)" class="task-card">
+        <label class="custom-checkbox">
+          <input
+            type="checkbox"
+            [checked]="task.completed"
+            (change)="toggleComplete(task)" />
+          <span class="checkmark"></span>
+
+          <div [ngClass]="{ 'completed': task.completed }">
+            <h4>{{ task.title }}</h4>
+            <p>{{ task.description }}</p>
+            <div class="meta">
+              <span style="display: flex; flex-direction: row;">
+                <div style="font-weight: 600; margin-right: 5px;">Assigned to:</div>
+                <ng-container *ngIf="isArray(task.assignedTo); else singleAssignee">
+                  <span *ngFor="let assignee of task.assignedTo; let i = index">
+                    {{ getEmployeeName(assignee) }}<span *ngIf="i < task.assignedTo.length - 1">, </span>
+                  </span>
+                </ng-container>
+                <ng-template #singleAssignee>
+                  {{ getEmployeeName(task.assignedTo) }}
+                </ng-template>
+              </span>
+              <span style="display: flex; flex-direction: row;">
+                <div style="font-weight: 600; margin-right: 5px;">Due:</div> {{ task.dueDate | date }}
+              </span>
+              <span style="display: flex; flex-direction: row;">
+                <div style="font-weight: 600; margin-right: 5px;">Assigned By:</div> {{ getEmployeeName(task.assignedBy) }}
+              </span>
+            </div>
+          </div>
+        </label>
+      </div>
+    </ng-container>
+  </div>
+</div>

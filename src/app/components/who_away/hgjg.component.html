@@ -1,0 +1,64 @@
+<div class="calendar-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
+  <!-- LEFT SECTION: Leave Requests -->
+  <div class="leave-requests" style="flex: 1; min-width: 300px; max-height: 74vh; overflow-y: auto;">
+    <h4 style="margin-bottom: 15px;">Employees on Leave</h4>
+
+    <div *ngIf="isWeekendClicked" style="color: #464646;">It’s a week off! 🎉</div>
+
+    <div *ngIf="!isWeekendClicked && selectedDateLeaves.length === 0" style="color: gray;">
+      No one is on leave.
+    </div>
+
+    <!-- Leave Cards -->
+    <div *ngFor="let leave of selectedDateLeaves" class="leave-card"
+         style="background: #f9f9f9; padding: 12px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+      <div style="display: flex; align-items: center;">
+        <img 
+          [src]="leave.employeeDetails?.profileImg || 'https://via.placeholder.com/40'" 
+          width="70" 
+          height="65" 
+          style="border-radius: 50%; margin-right: 10px; object-fit: contain;">
+        <div>
+          <strong>{{ leave.employeeDetails?.name || 'Unknown' }}</strong><br>
+          <small>EMPID : {{ leave.employeeDetails?.employeeId }}</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🎂 Birthday Section -->
+    <div *ngIf="selectedDateBirthdays.length > 0" style="margin-top: 30px;">
+      <h4 style="margin-bottom: 10px;">Birthday Spotlight 🎉</h4>
+
+      <div *ngFor="let birthday of selectedDateBirthdays" class="birthday-card"
+           style="background: #f9f9f9; padding: 12px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+        <div style="display: flex; align-items: center;">
+          <img 
+            [src]="birthday.profileImg || 'https://via.placeholder.com/40'" 
+            width="70" 
+            height="65" 
+            style="border-radius: 50%; margin-right: 10px; object-fit: contain;">
+          <div>
+            <strong>{{ birthday.name }}</strong><br>
+            <!-- <small>EMPID : {{ birthday.employeeId }}</small> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔥 Monthly Holidays at the Bottom -->
+    <div *ngIf="currentMonthHolidays.length > 0" style="margin-top: 30px;">
+      <h4 style="margin-bottom: 10px;">This Month's Holidays 🌿</h4>
+      <ul style="list-style: none; padding-left: 0;">
+        <li *ngFor="let holiday of currentMonthHolidays"
+            style="padding: 8px 12px; background: #e7f5e6; margin-bottom: 6px; border-radius: 6px;">
+          <strong>{{ holiday.event }}</strong> — {{ holiday.date }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- RIGHT SECTION: Calendar -->
+  <div class="calendar-wrapper" style="flex: 2; min-width: 500px;">
+    <full-calendar #fullcalendar [options]="calendarOptions"></full-calendar>
+  </div>
+</div>
