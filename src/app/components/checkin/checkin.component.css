@@ -11,21 +11,28 @@
 .content{
   
   width: 100%;
-  max-height: 55vh !; /* ~260px relative to 768px screen height */
+  height: 55vh !; /* ~260px relative to 768px screen height */
+  width: 23rem !important;
+
 
 }
 
 .content {
 height: 100%;
-max-height: 45vh;
+height: 45vh;
 }
 .gg {
   font-size: 12px !important; /* 16px */
 }
 
+.section-left {
+margin-left: 23px !important;
+}
+
 
 .section-right {
   gap: 0.8375rem !important; /* 15px */
+  margin-left: 15px
 }
 
 .info-box {
@@ -112,7 +119,7 @@ max-height: 45vh;
   padding: 0.9375rem; /* 15px */
   border-radius: 0.625rem; /* 10px */
   box-shadow: 0rem 0.125rem 0.625rem rgba(0, 0, 0, 0.1); /* 0px 2px 10px */
-  width: 13.02vw; /* ~250px relative to 1920px width */
+  max-width: 13.02vw; /* ~250px relative to 1920px width */
 }
 
 .info-box i {

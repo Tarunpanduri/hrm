@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild,Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { getDatabase, ref, get } from 'firebase/database';
 import jsPDF from 'jspdf';
@@ -13,6 +13,8 @@ import { EChartsOption } from 'echarts';
   styleUrls: ['./employee-report.component.css']
 })
 export class EmployeeReportComponent implements OnInit {
+  @Input() cardwidth: string = 'auto';
+
   @ViewChild('chartContainer', { static: false }) chartContainer!: ElementRef;
   private chartInstance: any;
 

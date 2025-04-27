@@ -2,13 +2,15 @@
 export const environment = {
   production: true,
   firebaseConfig: {
-    apiKey: 'AIzaSyDiGizVt8HAYh8AeSG4e4meIoF9qweCwGc',
-    authDomain: 'climhrm.firebaseapp.com',
-    projectId: 'climhrm',
-    storageBucket: 'climhrm.firebasestorage.app',
-    messagingSenderId: '364286990845',
-    appId: '1:364286990845:web:017b7b66e2d2986492e194',
-    measurementId: 'G-27QJRSD2WV',
-    databaseURL: 'https://climhrm-default-rtdb.firebaseio.com/'
+    apiKey: "AIzaSyB652tzitAie-aNaTsN4Go31sunKpWRzmQ",
+    authDomain: "climithrm.firebaseapp.com",
+    databaseURL: "https://climithrm-default-rtdb.firebaseio.com",
+    projectId: "climithrm",
+    storageBucket: "climithrm.firebasestorage.app",
+    messagingSenderId: "704935665662",
+    appId: "1:704935665662:web:cc869b81961061492aeaaf",
+    measurementId: "G-YNB3FRMELM"
   }
 };
+
+

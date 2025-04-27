@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "climhrm"
-  }
+    "default": "climhrm",
+    "clim": "climithrm"
+  },
+  "targets": {},
+  "etags": {}
 }
