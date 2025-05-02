@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-mobile-not-supported',
-  standalone:false,
+  standalone: false,
   styleUrls: ['./mobile-not-supported.component.css'],
   template: `
     <div style="text-align:center; padding: 50px;">
@@ -10,7 +10,6 @@ import { Component } from '@angular/core';
       <p>This application is not supported on mobile devices or small tablets.</p>
       <p class="pp">Please access this on a desktop or larger tablet.</p>
     </div>
-  `,
+  `
 })
 export class MobileNotSupportedComponent {}
-

@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "climhrm",
+    "default": "climithrm",
     "clim": "climithrm"
   },
   "targets": {},

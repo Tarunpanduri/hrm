@@ -59,6 +59,8 @@ import { EmployeeReportComponent } from './components/employee-report/employee-r
 import { WorkdayUploaderComponent } from './components/workday-uploader/workday-uploader.component';
 import { ChartGroupTwoComponent } from './components/chart-group-two/chart-group-two.component';
 import { MobileNotSupportedComponent } from './mobile-not-supported.component';
+import { ExperienceLetterComponent } from './components/shared/experience-letter/experience-letter.component';
+
 
 
 
@@ -95,7 +97,8 @@ import { MobileNotSupportedComponent } from './mobile-not-supported.component';
     WorkdayUploaderComponent,
     PayslipViewerComponent,
     ChartGroupTwoComponent,
-    MobileNotSupportedComponent
+    MobileNotSupportedComponent,
+    ExperienceLetterComponent,
   ],
   imports: [
     BrowserModule,

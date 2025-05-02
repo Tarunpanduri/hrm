@@ -1,0 +1,48 @@
+<div class="experience-letter-container">
+    <div class="search-container">
+      <h2>Generate Experience/Relieving Letter</h2>
+      <div class="search-box">
+        <input 
+          type="text" 
+          [(ngModel)]="searchEmpId" 
+          placeholder="Enter Employee ID (e.g., CIS012)" 
+          (keyup.enter)="searchEmployee()"
+        >
+        <button (click)="searchEmployee()" [disabled]="isLoading">
+          {{ isLoading ? 'Searching...' : 'Search' }}
+        </button>
+      </div>
+      
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+      
+      <div *ngIf="employee" class="employee-details">
+        <h3>Employee Found :</h3>
+        <div class="employee-info">
+          <img [src]="employee.profileImg" alt="Profile Image" class="profile-img" *ngIf="employee.profileImg">
+          <div class="details">
+            <p><strong>Name:</strong> {{ employee.name }}</p>
+            <p><strong>Employee ID:</strong> {{ employee.emp_id }}</p>
+            <p><strong>Role:</strong> {{ employee.role }}</p>
+            <p><strong>Department:</strong> {{ employee.department }}</p>
+          </div>
+        </div>
+        
+        <div class="button-group">
+            <button (click)="generateExperienceLetter()" class="generate-btn">
+              Generate Experience Letter
+            </button>
+            <button (click)="generateRelievingLetter()" class="generate-btn relieving-btn">
+              Generate Relieving Letter
+            </button>
+            <button (click)="generateInternshipLetter()" class="generate-btn internship-btn">
+                Generate Internship Letter
+              </button>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+  
